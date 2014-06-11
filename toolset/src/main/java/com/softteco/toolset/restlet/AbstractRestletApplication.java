@@ -18,13 +18,13 @@ public abstract class AbstractRestletApplication extends ResourceInjectingApplic
 
         super.start();
     }
-    
+
     @Override
     public final Restlet createInboundRoot() {
         final Router router = newRouter();
         createInboundRoot(router);
         return router;
     }
-    
+
     protected abstract void createInboundRoot(final Router router);
 }

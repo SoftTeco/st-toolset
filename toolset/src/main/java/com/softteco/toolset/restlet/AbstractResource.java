@@ -12,7 +12,7 @@ import org.restlet.ext.servlet.ServletUtils;
  *
  * @author serge
  */
-public abstract class AbstractResource<UserSession> extends SelfInjectingServerResource {
+public abstract class AbstractResource<S extends UserSession> extends SelfInjectingServerResource {
 
     @Inject
     private Provider<UserSession> userSessionProvider;
@@ -21,9 +21,9 @@ public abstract class AbstractResource<UserSession> extends SelfInjectingServerR
     protected void doCatch(final Throwable throwable) {
         super.doCatch(throwable);
     }
-    
-    protected UserSession getUserSession() {
-        return userSessionProvider.get();
+
+    protected S getUserSession() {
+        return (S) userSessionProvider.get();
     }
 
     protected HttpServletRequest getHttpServletRequest() {
@@ -33,7 +33,7 @@ public abstract class AbstractResource<UserSession> extends SelfInjectingServerR
     protected HttpSession getHttpSession() {
         return getHttpServletRequest().getSession();
     }
-    
+
     protected void removeFromSession(final String key) {
         getHttpSession().removeAttribute(key);
     }
@@ -50,7 +50,7 @@ public abstract class AbstractResource<UserSession> extends SelfInjectingServerR
 
         return Integer.parseInt(param);
     }
-    
+
     protected String getCurrentUsername() throws AuthorizationException {
         try {
             return getHttpServletRequest().getUserPrincipal().getName();
@@ -62,7 +62,7 @@ public abstract class AbstractResource<UserSession> extends SelfInjectingServerR
     protected String getSessionId() {
         return getHttpServletRequest().getSession().getId();
     }
-    
+
     protected PageInfoDto getPageInfo() {
         final PageInfoDto dto = new PageInfoDto();
         dto.pageNumber = getIntParam("pageNumber", 0);

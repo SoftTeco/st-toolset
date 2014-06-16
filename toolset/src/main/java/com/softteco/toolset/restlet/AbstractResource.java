@@ -22,6 +22,19 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         super.doCatch(throwable);
     }
 
+    @Override
+    protected void doInit() {
+        super.doInit();
+
+        try {
+            getUserSession().setUsername(getCurrentUsername());
+        } catch (AuthorizationException e) {
+            getUserSession().setUsername(null);
+        }
+
+        getUserSession().setLang(this.getQueryValue("lang"));
+    }
+
     protected S getUserSession() {
         return (S) userSessionProvider.get();
     }

@@ -5,7 +5,9 @@ import com.google.inject.name.Names;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
+import com.google.inject.servlet.SessionScoped;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
+import com.softteco.toolset.restlet.UserSession;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +31,16 @@ public abstract class AbstractApplicationModule extends ServletModule {
         configurePersistModule();
         configureRestlets();
         configureProperties();
+        configureUserSession();
+        
+        configureApplication();
     }
+    
+    protected void configureUserSession() {
+        bind(UserSession.class).to(getUserSessionClass()).in(SessionScoped.class);
+    }
+    
+    protected abstract Class<? extends UserSession> getUserSessionClass();
 
     protected void configureApplication() {
     }

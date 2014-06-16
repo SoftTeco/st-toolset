@@ -48,6 +48,7 @@ public class AbstractStatusService extends StatusService {
             jsono.put("status", status.getCode());
             jsono.put("status-description", status.getDescription());
             if (status.getThrowable() != null) {
+                status.getThrowable().printStackTrace(System.out);
                 jsono.put("stackTrace", getStackTrace(status.getThrowable()));
             }
             if (status.getThrowable() instanceof ResourceException) {
@@ -55,8 +56,10 @@ public class AbstractStatusService extends StatusService {
             } else {
                 append(status.getThrowable(), jsono);
             }
+            
             return new StringRepresentation(jsono.toString(), MediaType.APPLICATION_JSON);
         } catch (JSONException e) {
+            e.printStackTrace(System.out);
             return new StringRepresentation(e.getMessage(), MediaType.APPLICATION_JSON);
         }
     }

@@ -32,14 +32,14 @@ public abstract class AbstractApplicationModule extends ServletModule {
         configureRestlets();
         configureProperties();
         configureUserSession();
-        
+
         configureApplication();
     }
-    
+
     protected void configureUserSession() {
         bind(UserSession.class).to(getUserSessionClass()).in(SessionScoped.class);
     }
-    
+
     protected abstract Class<? extends UserSession> getUserSessionClass();
 
     protected void configureApplication() {
@@ -62,19 +62,32 @@ public abstract class AbstractApplicationModule extends ServletModule {
         bind(RestletApplicationServlet.class).in(Scopes.SINGLETON);
         serve("/api/*").with(RestletApplicationServlet.class, params);
     }
-    
+
     protected String getPropertiesPath() {
         return null;
+    }
+
+    protected Properties getDefaultProperties() {
+        return new Properties();
     }
 
     private void configureProperties() {
         if (getPropertiesPath() == null) {
             return;
         }
-        
+
         try {
             final Properties properties = new Properties();
             properties.load(new FileReader(getPropertiesPath()));
+
+            for (String eachKey : getDefaultProperties().stringPropertyNames()) {
+                if (properties.containsKey(eachKey)) {
+                    continue;
+                }
+
+                properties.put(eachKey, getDefaultProperties().getProperty(eachKey));
+            }
+
             Names.bindProperties(binder(), properties);
         } catch (IOException e) {
             throw new RuntimeException("Can't load config file", e);

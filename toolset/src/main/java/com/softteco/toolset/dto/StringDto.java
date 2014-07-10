@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author serge
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UuidDto implements Serializable {
+public class StringDto implements Serializable {
 
-    public String uuid;
+    public String string;
 }

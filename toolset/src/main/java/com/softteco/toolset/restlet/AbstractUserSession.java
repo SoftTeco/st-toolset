@@ -14,6 +14,7 @@ public abstract class AbstractUserSession implements UserSession {
         return lang;
     }
 
+    @Override
     public void setLang(String lang) {
         if (lang == null || lang.isEmpty()) {
             return;
@@ -26,6 +27,7 @@ public abstract class AbstractUserSession implements UserSession {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         if (this.username != null && !this.username.equals(username)) {
             System.out.println("PROBLEM with setting username: " + this.username + " vs " + username);

@@ -65,6 +65,10 @@ public class AbstractStatusService extends StatusService {
     }
 
     private String getStackTrace(final Throwable throwable) {
+        if (throwable == null) {
+            return "Throwable is not defined";
+        }
+        
         if (throwable instanceof ResourceException) {
             return getStackTrace(throwable.getCause());
         }

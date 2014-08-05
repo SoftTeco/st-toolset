@@ -8,6 +8,7 @@ import com.google.inject.servlet.ServletModule;
 import com.google.inject.servlet.SessionScoped;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
 import com.softteco.toolset.restlet.UserSession;
+import com.softteco.toolset.xml.XmlProcessor;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public abstract class AbstractApplicationModule extends ServletModule {
         configureRestlets();
         configureProperties();
         configureUserSession();
+        configureXmlProcessor();
 
         configureApplication();
     }
@@ -43,6 +45,16 @@ public abstract class AbstractApplicationModule extends ServletModule {
     protected abstract Class<? extends UserSession> getUserSessionClass();
 
     protected void configureApplication() {
+    }
+    
+    protected Class<? extends XmlProcessor> getXmlProcessor() {
+        return null;
+    }
+    
+    protected void configureXmlProcessor() {
+        if (getXmlProcessor() != null) {
+            bind(XmlProcessor.class).to(getXmlProcessor());
+        }
     }
 
     protected abstract String getJpaUnitName();

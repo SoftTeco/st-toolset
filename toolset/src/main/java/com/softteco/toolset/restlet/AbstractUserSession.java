@@ -30,8 +30,22 @@ public abstract class AbstractUserSession implements UserSession {
     @Override
     public void setUsername(String username) {
         if (this.username != null && !this.username.equals(username)) {
-            System.out.println("PROBLEM with setting username: " + this.username + " vs " + username);
+            System.out.println("PROBLEM with setting username: " + this.username + " vs " + username + ". So cleanup session.");
+            cleanup();
         }
         this.username = username;
+    }
+
+    protected abstract void cleanup();
+
+    public boolean isLoggedIn() {
+        return username != null;
+    }
+
+    protected void checkOnLogin() {
+        if (!isLoggedIn()) {
+            cleanup();
+            throw new SecurityException("User is not logged in.");
+        }
     }
 }

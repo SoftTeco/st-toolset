@@ -7,16 +7,19 @@ public abstract class AbstractAssembler<E, D> implements Assembler<E, D> {
 
     protected abstract Class<D> getDtoClass();
 
-    @Override
-    public final D assemble(final E entity) {
-        final D dto;
+    protected D newInstance() {
         try {
-            dto = getDtoClass().newInstance();
+            return getDtoClass().newInstance();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public final D assemble(final E entity) {
+        final D dto = newInstance();
         assemble(dto, entity);
         return dto;
     }

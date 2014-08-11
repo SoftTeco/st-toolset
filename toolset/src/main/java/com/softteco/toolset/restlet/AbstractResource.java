@@ -26,13 +26,11 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     protected void doInit() {
         super.doInit();
 
-        try {
-            getUserSession().setUsername(getCurrentUsername());
-        } catch (AuthorizationException e) {
-            getUserSession().setUsername(null);
-        }
-
         getUserSession().setLang(this.getQueryValue("lang"));
+
+        final PrincipalDto principalDto = PrincipalDto.build(getHttpServletRequest());
+        getUserSession().setUsername(principalDto.username);
+        getUserSession().setRoles(principalDto.roles);
     }
 
     protected S getUserSession() {

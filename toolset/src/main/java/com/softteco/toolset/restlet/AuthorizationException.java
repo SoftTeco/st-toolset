@@ -24,4 +24,13 @@ public class AuthorizationException extends Exception {
     public AuthorizationStatus getAuthorizationStatus() {
         return authorizationStatus;
     }
+
+    @Override
+    public String getMessage() {
+        final String message = authorizationStatus.getMessage();
+        if (message == null) {
+            return super.getMessage();
+        }
+        return message;
+    }
 }

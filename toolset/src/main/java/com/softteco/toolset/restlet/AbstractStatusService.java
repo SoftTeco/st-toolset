@@ -25,6 +25,15 @@ public class AbstractStatusService extends StatusService {
     }
 
     private Status getStatus(final Status status, final Throwable throwable) {
+        if (throwable instanceof AuthorizationException) {
+            final AuthorizationException authorizationException = (AuthorizationException) throwable;
+            if (authorizationException.getAuthorizationStatus() == AuthorizationStatus.NOT_LOGGED_IN) {
+                return Status.CLIENT_ERROR_UNAUTHORIZED;
+            } else {
+                return Status.CLIENT_ERROR_FORBIDDEN;
+            }
+        }
+
         if (throwable instanceof ResourceException) {
             return getStatus(status, throwable.getCause());
         }
@@ -39,12 +48,24 @@ public class AbstractStatusService extends StatusService {
     protected Status getStatus(final Throwable throwable) {
         return null;
     }
+    
+    private String getMessage(final Throwable throwable) {
+        if (throwable == null) {
+            return "Server errors";
+        }
+        
+        if (throwable instanceof ResourceException) {
+            return getMessage(throwable.getCause());
+        }
+        
+        return throwable.getMessage();
+    }
 
     @Override
     public Representation getRepresentation(final Status status, final Request request, final Response response) {
         try {
             final JSONObject jsono = new JSONObject();
-            jsono.put("message", status.getThrowable() == null ? "Server errors" : status.getThrowable().getMessage());
+            jsono.put("message", getMessage(status.getThrowable()));
             jsono.put("status", status.getCode());
             jsono.put("status-description", status.getDescription());
             if (status.getThrowable() != null) {
@@ -56,7 +77,7 @@ public class AbstractStatusService extends StatusService {
             } else {
                 append(status.getThrowable(), jsono);
             }
-            
+
             return new StringRepresentation(jsono.toString(), MediaType.APPLICATION_JSON);
         } catch (JSONException e) {
             e.printStackTrace(System.out);
@@ -68,7 +89,7 @@ public class AbstractStatusService extends StatusService {
         if (throwable == null) {
             return "Throwable is not defined";
         }
-        
+
         if (throwable instanceof ResourceException) {
             return getStackTrace(throwable.getCause());
         }

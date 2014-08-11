@@ -81,7 +81,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
     public List<Entity> findAll(final PageInfoDto page) {
         final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getName()).append(" e");
         if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
-            queryBuilder.append(" e order by e.").append(getOrderProperty());
+            queryBuilder.append(" order by e.").append(getOrderProperty());
         }
         final Query query = getEntityManager().createQuery(queryBuilder.toString());
         return getResultList(query, page);

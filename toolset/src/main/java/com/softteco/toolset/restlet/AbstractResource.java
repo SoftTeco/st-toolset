@@ -52,6 +52,15 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     protected void addToSession(final String key, final Object value) {
         getHttpSession().setAttribute(key, value);
     }
+    
+    protected boolean getBoolParam(final String name, final boolean defaultValue) {
+        final String param = getQuery().getValues(name);
+        if (param == null) {
+            return defaultValue;
+        }
+
+        return Boolean.parseBoolean(param);
+    }
 
     protected int getIntParam(final String name, final int defaultValue) {
         final String param = getQuery().getValues(name);

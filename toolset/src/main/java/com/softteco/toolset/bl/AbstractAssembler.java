@@ -18,7 +18,7 @@ public abstract class AbstractAssembler<E, D> implements Assembler<E, D> {
     }
 
     @Override
-    public final D assemble(final E entity) {
+    public D assemble(final E entity) {
         final D dto = newInstance();
         assemble(dto, entity);
         return dto;

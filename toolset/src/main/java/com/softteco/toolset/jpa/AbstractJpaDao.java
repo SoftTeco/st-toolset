@@ -102,7 +102,11 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     public void remove(final Entity entity) {
-        getEntityManager().refresh(entity);
+        try {
+            getEntityManager().refresh(entity);
+        } catch (RuntimeException e) {
+            // do nothing...
+        }
         getEntityManager().remove(entity);
     }
 }

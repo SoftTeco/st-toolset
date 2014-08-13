@@ -22,8 +22,6 @@ public class EnumResource<E extends Enum> extends AbstractResource<UserSession> 
     }
 
     private Class<E> getEnumClass() {
-//        final ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();
-//        return (Class<E>) superclass.getActualTypeArguments()[0];
         return enumClass;
     }
 

@@ -61,6 +61,15 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
 
         return Boolean.parseBoolean(param);
     }
+    
+    protected String getStringParam(final String name, final String defaultValue) {
+        final String param = getQuery().getValues(name);
+        if (param == null) {
+            return defaultValue;
+        }
+
+        return param;
+    }
 
     protected int getIntParam(final String name, final int defaultValue) {
         final String param = getQuery().getValues(name);

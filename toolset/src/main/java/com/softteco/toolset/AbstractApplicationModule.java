@@ -6,6 +6,7 @@ import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 import com.google.inject.servlet.SessionScoped;
+import com.softteco.toolset.mail.MailService;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.xml.XmlProcessor;
@@ -34,8 +35,19 @@ public abstract class AbstractApplicationModule extends ServletModule {
         configureProperties();
         configureUserSession();
         configureXmlProcessor();
+        configureMailService();
 
         configureApplication();
+    }
+    
+    protected Class<? extends MailService> getMailServiceClass() {
+        return null;
+    }
+    
+    private void configureMailService() {
+        if (getMailServiceClass() != null) {
+            bind(MailService.class).to(getMailServiceClass());
+        }
     }
 
     protected void configureUserSession() {

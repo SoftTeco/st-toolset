@@ -1,10 +1,12 @@
 package com.softteco.toolset.restlet;
 
+import com.softteco.toolset.dto.PageDto;
 import java.util.Arrays;
 import java.util.List;
 import org.restlet.Restlet;
-import org.restlet.resource.Finder;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 
 /**
  *
@@ -28,5 +30,10 @@ public class EnumResource<E extends Enum> extends AbstractResource<UserSession> 
     @Get("json")
     public List<E> getValues() {
         return Arrays.asList(getEnumClass().getEnumConstants());
+    }
+
+    @Post("json")
+    public PageDto<E> getValuesAsPage(final EnumTypeDto dto) {
+        return new PageDto<E>(null, Arrays.asList(getEnumClass().getEnumConstants()));
     }
 }

@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.catalina.realm.GenericPrincipal;
 
@@ -18,25 +19,26 @@ public class PrincipalDto implements Serializable {
         final PrincipalDto dto = new PrincipalDto();
         final Principal principal = httpServletRequest.getUserPrincipal();
         if (principal == null) {
-            return dto;
+            return null;
         }
         dto.username = principal.getName();
         dto.roles = getRoles(httpServletRequest);
         return dto;
     }
 
-    private static List<String> getRoles(final HttpServletRequest httpServletRequest) {
+    private static Set<String> getRoles(final HttpServletRequest httpServletRequest) {
         final Principal userPrincipal = httpServletRequest.getUserPrincipal();
         if (userPrincipal == null) {
-            return Collections.EMPTY_LIST;
+            return null;
         }
         final GenericPrincipal genericPrincipal = (GenericPrincipal) userPrincipal;
         final String[] roles = genericPrincipal.getRoles();
         if (roles == null) {
-            return Collections.EMPTY_LIST;
+            return null;
         }
-        return Arrays.asList(roles);
+        return new HashSet<String>(Arrays.asList(roles));
     }
+
     public String username;
-    public List<String> roles = Collections.EMPTY_LIST;
+    public Set<String> roles = Collections.EMPTY_SET;
 }

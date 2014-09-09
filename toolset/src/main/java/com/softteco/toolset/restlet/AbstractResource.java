@@ -29,8 +29,10 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         getUserSession().setLang(this.getQueryValue("lang"));
 
         final PrincipalDto principalDto = PrincipalDto.build(getHttpServletRequest());
-        getUserSession().setUsername(principalDto.username);
-        getUserSession().setRoles(principalDto.roles);
+        if (principalDto != null) {
+            getUserSession().setUsername(principalDto.username);
+            getUserSession().setRoles(principalDto.roles);
+        }
     }
 
     protected S getUserSession() {
@@ -52,7 +54,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     protected void addToSession(final String key, final Object value) {
         getHttpSession().setAttribute(key, value);
     }
-    
+
     protected double getDoubleParam(String name, Double defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
@@ -61,7 +63,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
 
         return Double.parseDouble(param);
     }
-    
+
     protected boolean getBoolParam(final String name, final boolean defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
@@ -70,7 +72,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
 
         return Boolean.parseBoolean(param);
     }
-    
+
     protected String getStringParam(final String name, final String defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
@@ -80,13 +82,22 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return param;
     }
 
-    protected int getIntParam(final String name, final int defaultValue) {
+    protected Integer getIntParam(final String name, final Integer defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
             return defaultValue;
         }
 
         return Integer.parseInt(param);
+    }
+
+    protected Long getLongParam(final String name, final Long defaultValue) {
+        final String param = getQuery().getValues(name);
+        if (param == null) {
+            return defaultValue;
+        }
+
+        return Long.parseLong(param);
     }
 
     protected String getCurrentUsername() throws AuthorizationException {

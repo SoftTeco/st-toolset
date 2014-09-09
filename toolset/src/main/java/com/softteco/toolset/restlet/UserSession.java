@@ -1,6 +1,7 @@
 package com.softteco.toolset.restlet;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -16,7 +17,13 @@ public interface UserSession {
 
     void setLang(String lang);
 
-    List<String> getRoles();
+    Set<String> getRoles();
 
-    void setRoles(List<String> roles);
+    void setRoles(Set<String> roles);
+    
+    boolean hasRole(String role);
+    
+    boolean hasRoles(String... roles);
+    
+    boolean hasRoles(List<String> roles);
 }

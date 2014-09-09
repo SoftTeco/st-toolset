@@ -1,6 +1,7 @@
 package com.softteco.toolset;
 
 import com.google.inject.Scopes;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
@@ -9,6 +10,9 @@ import com.google.inject.servlet.SessionScoped;
 import com.softteco.toolset.mail.MailService;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
 import com.softteco.toolset.restlet.UserSession;
+import com.softteco.toolset.security.AssertRole;
+import com.softteco.toolset.security.AssertRoles;
+import com.softteco.toolset.security.SecurityInterceptor;
 import com.softteco.toolset.xml.XmlProcessor;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,12 +40,22 @@ public abstract class AbstractApplicationModule extends ServletModule {
         configureUserSession();
         configureXmlProcessor();
         configureMailService();
+        configureSecurity();
 
         configureApplication();
     }
     
     protected Class<? extends MailService> getMailServiceClass() {
         return null;
+    }
+    
+    protected void configureSecurity() {
+        final SecurityInterceptor securityInterceptor = new SecurityInterceptor();
+        requestInjection(securityInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertRole.class), securityInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertRoles.class), securityInterceptor);
+        bindInterceptor(Matchers.annotatedWith(AssertRoles.class), Matchers.any(), securityInterceptor);
+        bindInterceptor(Matchers.annotatedWith(AssertRole.class), Matchers.any(), securityInterceptor);
     }
     
     private void configureMailService() {

@@ -3,6 +3,7 @@ package com.softteco.toolset.jpa;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.softteco.toolset.dto.PageInfoDto;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -17,7 +18,10 @@ public abstract class AbstractJpaDao<Entity, Id> {
     @Inject
     private Provider<EntityManager> emProvider;
 
-    protected abstract Class<Entity> getEntityClass();
+    protected Class<Entity> getEntityClass() {
+        final ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();
+        return (Class<Entity>) superclass.getActualTypeArguments()[0];
+    }
 
     protected String getOrderProperty() {
         return "";
@@ -28,8 +32,10 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     protected List<Entity> getResultList(final Query query, final PageInfoDto page) {
-        query.setMaxResults(page.pageSize + 1);
-        query.setFirstResult(page.getFirst());
+        if (page.isPaggable()) {
+            query.setMaxResults(page.pageSize + 1);
+            query.setFirstResult(page.getFirst());
+        }
         return query.getResultList();
     }
 

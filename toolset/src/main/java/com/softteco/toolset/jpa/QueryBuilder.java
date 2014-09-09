@@ -43,6 +43,10 @@ public class QueryBuilder {
         }
         return queryBuilder.toString();
     }
+    
+    public void append(String queryPart) {
+        queryBuilder.append(queryPart);
+    }
 
     public Query build(EntityManager entityManager) {
         final Query query = entityManager.createQuery(getQuery());

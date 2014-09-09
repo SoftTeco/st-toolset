@@ -3,6 +3,7 @@ package com.softteco.toolset.jpa;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.softteco.toolset.dto.PageInfoDto;
+import com.softteco.toolset.dto.SortInfoDto;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -80,9 +81,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
 
     public List<Entity> findAll(final PageInfoDto page) {
         final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getName()).append(" e");
-        if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
-            queryBuilder.append(" order by e.").append(getOrderProperty());
-        }
+        queryBuilder.append(getOrderBy(page));
         final Query query = getEntityManager().createQuery(queryBuilder.toString());
         return getResultList(query, page);
     }
@@ -109,4 +108,21 @@ public abstract class AbstractJpaDao<Entity, Id> {
         }
         getEntityManager().remove(entity);
     }
+        
+    protected String getOrderBy(final PageInfoDto page) {
+        final StringBuilder queryBuilder = new StringBuilder();
+        if(page.sort != null && page.sort.length > 0) {
+            queryBuilder.append(" order by ");
+            for (int i = 0; i < page.sort.length; i++) {
+                final SortInfoDto sortParam = page.sort[i];
+                if(i > 0) queryBuilder.append(",");
+                queryBuilder.append("e.").append(sortParam.sortParam).append(" ").append(sortParam.sortAsc ? "asc" : "desc");
+            }
+        } else if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
+            queryBuilder.append(" order by e.").append(getOrderProperty());
+        }
+        return queryBuilder.toString();
+    }
+
+
 }

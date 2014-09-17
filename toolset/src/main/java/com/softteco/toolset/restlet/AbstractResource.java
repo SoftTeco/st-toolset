@@ -3,6 +3,9 @@ package com.softteco.toolset.restlet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.softteco.toolset.dto.PageInfoDto;
+import com.softteco.toolset.dto.SortInfoDto;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.restlet.ext.guice.SelfInjectingServerResource;
@@ -116,6 +119,25 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         final PageInfoDto dto = new PageInfoDto();
         dto.pageNumber = getIntParam("pageNumber", 0);
         dto.pageSize = getIntParam("pageSize", 20);
+        
+        List<SortInfoDto> sortInfoDtos = new ArrayList<SortInfoDto>();
+        addSortIfExists("", sortInfoDtos);
+        for(int i = 1; i <= 10; i++) {
+            addSortIfExists("" + i, sortInfoDtos);
+        }
+        
+        if(!sortInfoDtos.isEmpty()) {
+            dto.sort = sortInfoDtos.toArray(new SortInfoDto[]{});
+        }
         return dto;
+    }
+
+    private void addSortIfExists(String suffix, List<SortInfoDto> sortInfoDtos) {
+        if(getStringParam("sortParam" + suffix, null) != null) {
+            final SortInfoDto sortInfoDto = new SortInfoDto();
+            sortInfoDto.sortParam = getStringParam("sortParam" + suffix, null);
+            sortInfoDto.sortAsc = getBoolParam("sortAsc" + suffix, true);
+            sortInfoDtos.add(sortInfoDto);
+        }
     }
 }

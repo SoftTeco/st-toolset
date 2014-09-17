@@ -17,6 +17,10 @@ public class PrincipalDto implements Serializable {
 
     public static PrincipalDto build(final HttpServletRequest httpServletRequest) {
         final PrincipalDto dto = new PrincipalDto();
+        if(httpServletRequest == null) {
+            return dto;
+        }
+        
         final Principal principal = httpServletRequest.getUserPrincipal();
         if (principal == null) {
             return null;

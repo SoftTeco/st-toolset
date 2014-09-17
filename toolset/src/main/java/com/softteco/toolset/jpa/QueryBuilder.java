@@ -13,6 +13,7 @@ public class QueryBuilder {
 
     private final StringBuilder queryBuilder = new StringBuilder();
     private final StringBuilder whereBuilder = new StringBuilder();
+    private final StringBuilder orderByBuilder = new StringBuilder();
     private final Map<String, Object> values = new HashMap<String, Object>();
 
     public QueryBuilder(final String coreQuery) {
@@ -39,9 +40,20 @@ public class QueryBuilder {
 
     private String getQuery() {
         if (whereBuilder.length() > 0) {
-            queryBuilder.append(" where ").append(whereBuilder.toString());
+            queryBuilder.append(" where ").append(whereBuilder);
+        }
+        if(orderByBuilder.length() > 0) {
+            queryBuilder.append(" ").append(orderByBuilder);
         }
         return queryBuilder.toString();
+    }
+    
+    public void append(String queryPart) {
+        queryBuilder.append(queryPart);
+    }
+
+    public void orderBy(String orderBy) {
+        orderByBuilder.append(orderBy);
     }
 
     public Query build(EntityManager entityManager) {

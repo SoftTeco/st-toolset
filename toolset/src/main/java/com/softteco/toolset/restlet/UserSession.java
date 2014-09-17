@@ -19,4 +19,8 @@ public interface UserSession {
     List<String> getRoles();
 
     void setRoles(List<String> roles);
+    
+    void assertRole(String... roles);
+
+    boolean isLoggedIn();
 }

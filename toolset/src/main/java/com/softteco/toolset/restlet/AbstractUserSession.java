@@ -59,6 +59,7 @@ public abstract class AbstractUserSession implements UserSession {
         this.roles = roles;
     }
     
+    @Override
     public void assertRole(final String... roles) {
         if (!hasRole(roles)) {
             throw new SecurityException("User [" + getUsername() + "] doesn't have roles: " + Arrays.toString(roles));

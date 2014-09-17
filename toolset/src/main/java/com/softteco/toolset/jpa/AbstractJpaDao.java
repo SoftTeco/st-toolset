@@ -114,14 +114,16 @@ public abstract class AbstractJpaDao<Entity, Id> {
         }
         getEntityManager().remove(entity);
     }
-        
+
     protected String getOrderBy(final PageInfoDto page) {
         final StringBuilder queryBuilder = new StringBuilder();
-        if(page.sort != null && page.sort.length > 0) {
+        if (page.sort != null && page.sort.length > 0) {
             queryBuilder.append(" order by ");
             for (int i = 0; i < page.sort.length; i++) {
                 final SortInfoDto sortParam = page.sort[i];
-                if(i > 0) queryBuilder.append(",");
+                if (i > 0) {
+                    queryBuilder.append(",");
+                }
                 queryBuilder.append("e.").append(sortParam.sortParam).append(" ").append(sortParam.sortAsc ? "asc" : "desc");
             }
         } else if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
@@ -129,6 +131,4 @@ public abstract class AbstractJpaDao<Entity, Id> {
         }
         return queryBuilder.toString();
     }
-
-
 }

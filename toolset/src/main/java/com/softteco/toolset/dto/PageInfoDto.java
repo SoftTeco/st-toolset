@@ -18,4 +18,8 @@ public class PageInfoDto implements Serializable {
     public boolean isPaggable() {
         return pageSize > 0;
     }
+
+    public int getLast() {
+        return (pageNumber + 1) * pageSize;
+    }
 }

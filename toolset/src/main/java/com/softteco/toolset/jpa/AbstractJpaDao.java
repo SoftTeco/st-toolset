@@ -76,7 +76,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     public List<Entity> findAll() {
-        final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getName()).append(" e");
+        final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getSimpleName()).append(" e");
         if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
             queryBuilder.append(" order by e.").append(getOrderProperty());
         }
@@ -85,7 +85,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     public List<Entity> findAll(final PageInfoDto page) {
-        final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getName()).append(" e");
+        final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getSimpleName()).append(" e");
         if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
             queryBuilder.append(" order by e.").append(getOrderProperty());
         }

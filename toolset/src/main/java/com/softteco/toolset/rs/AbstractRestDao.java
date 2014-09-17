@@ -2,6 +2,8 @@ package com.softteco.toolset.rs;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 
 /**
  *
@@ -27,8 +29,17 @@ public abstract class AbstractRestDao {
         return "http";
     }
 
+    protected boolean allowToUseSelfSignedCertificates() {
+        return false;
+    }
+
     public HttpClient getClient() {
         if (httpClient == null) {
+            if (allowToUseSelfSignedCertificates()) {
+                Protocol easyhttps = new Protocol("https", (ProtocolSocketFactory) new EasySSLProtocolSocketFactory(), 443);
+                Protocol.registerProtocol("https", easyhttps);
+            }
+
             httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
             httpClient.getHostConfiguration().setHost(getHost(), getPort(), getProtocol());
             configureClient(httpClient);
@@ -36,8 +47,7 @@ public abstract class AbstractRestDao {
 
         return httpClient;
     }
-    
+
     protected void configureClient(final HttpClient client) {
-        
     }
 }

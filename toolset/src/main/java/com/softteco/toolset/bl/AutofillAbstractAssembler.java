@@ -17,6 +17,11 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
         return (Class<D>) superclass.getActualTypeArguments()[1];
     }
 
+    protected Class<E> getEntityClass() {
+        final ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();
+        return (Class<E>) superclass.getActualTypeArguments()[0];
+    }
+
     @Override
     public void assemble(D dto, E entity) {
         if (entity == null) {
@@ -34,7 +39,16 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
                 }
 
                 try {
-                    each.set(dto, method.invoke(entity));
+                    if (method.getReturnType().equals(each.getType())) {
+                        each.set(dto, method.invoke(entity));
+                    } else {
+                        try {
+                            final Method methodInAssembler = this.getClass().getMethod("get" + each.getName().substring(0, 1).toUpperCase() + each.getName().substring(1), getEntityClass());
+                            each.set(dto, methodInAssembler.invoke(this, entity));
+                        } catch (NoSuchMethodException e) {
+                            throw new RuntimeException("Types are not equal: " + method.getReturnType().getSimpleName() + " vs " + each.getType().getSimpleName() + " " + each.getName(), e);
+                        }
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace(System.out);
                 } catch (InvocationTargetException e) {

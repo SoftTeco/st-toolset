@@ -20,7 +20,14 @@ public abstract class AbstractJpaDao<Entity, Id> {
     private Provider<EntityManager> emProvider;
 
     protected Class<Entity> getEntityClass() {
-        final ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();
+        final ParameterizedType superclass;
+        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
+            superclass = (ParameterizedType) getClass().getGenericSuperclass();
+        } else if (getClass().getGenericSuperclass() instanceof Class) {
+            superclass = (ParameterizedType) ((Class) getClass().getGenericSuperclass()).getGenericSuperclass();
+        } else {
+            throw new RuntimeException("" + getClass().getGenericSuperclass());
+        }
         return (Class<Entity>) superclass.getActualTypeArguments()[0];
     }
 

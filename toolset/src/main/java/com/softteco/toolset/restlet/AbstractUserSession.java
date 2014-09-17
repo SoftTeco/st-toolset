@@ -1,7 +1,6 @@
 package com.softteco.toolset.restlet;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -99,6 +98,7 @@ public abstract class AbstractUserSession implements UserSession {
 
     protected abstract void cleanup();
 
+    @Override
     public boolean isLoggedIn() {
         return username != null;
     }

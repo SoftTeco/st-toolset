@@ -1,6 +1,5 @@
 package com.softteco.toolset.restlet;
 
-import com.softteco.toolset.bl.Assembler;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;

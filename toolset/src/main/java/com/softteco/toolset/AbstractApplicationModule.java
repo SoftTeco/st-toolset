@@ -95,7 +95,7 @@ public abstract class AbstractApplicationModule extends ServletModule {
     private void configureRestlets() {
         bind(Application.class).to(getRestletApplication());
 
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("org.restlet.application", getRestletApplication().getName());
         bind(RestletApplicationServlet.class).in(Scopes.SINGLETON);
         serve("/api/*").with(RestletApplicationServlet.class, params);

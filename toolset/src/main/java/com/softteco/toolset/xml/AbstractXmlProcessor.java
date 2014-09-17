@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public abstract class AbstractXmlProcessor implements XmlProcessor {
 
-    private final Set<Class> supportedClasses = new HashSet<Class>();
+    private final Set<Class> supportedClasses = new HashSet<>();
 
     protected void addSupportedClass(final Class beanClass) {
         supportedClasses.add(beanClass);
@@ -77,7 +77,7 @@ public abstract class AbstractXmlProcessor implements XmlProcessor {
     }
 
     private List<String> validate(final String path, final Object entity) {
-        final List<String> errors = new ArrayList<String>();
+        final List<String> errors = new ArrayList<>();
         for (Field each : entity.getClass().getFields()) {
             if (!Modifier.isPublic(each.getModifiers()) || Modifier.isStatic(each.getModifiers())) {
                 continue;

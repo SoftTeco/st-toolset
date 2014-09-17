@@ -120,7 +120,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         dto.pageNumber = getIntParam("pageNumber", 0);
         dto.pageSize = getIntParam("pageSize", 20);
         
-        List<SortInfoDto> sortInfoDtos = new ArrayList<SortInfoDto>();
+        List<SortInfoDto> sortInfoDtos = new ArrayList<>();
         addSortIfExists("", sortInfoDtos);
         for(int i = 1; i <= 10; i++) {
             addSortIfExists("" + i, sortInfoDtos);

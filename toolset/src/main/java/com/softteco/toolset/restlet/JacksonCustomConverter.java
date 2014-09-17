@@ -18,14 +18,14 @@ public class JacksonCustomConverter extends JacksonConverter {
 
     @Override
     protected <T> JacksonRepresentation<T> create(MediaType mediaType, T source) {
-        final JacksonRepresentation jr = new JacksonRepresentation<T>(mediaType, source);
+        final JacksonRepresentation jr = new JacksonRepresentation<>(mediaType, source);
         jr.setObjectMapper(getObjectMapper());
         return jr;
     }
 
     @Override
     protected <T> JacksonRepresentation<T> create(Representation source, Class<T> objectClass) {
-        final JacksonRepresentation jr = new JacksonRepresentation<T>(source, objectClass);
+        final JacksonRepresentation jr = new JacksonRepresentation<>(source, objectClass);
         jr.setObjectMapper(getObjectMapper());
         return jr;
     }

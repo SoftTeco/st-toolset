@@ -14,7 +14,7 @@ public class ListUtils {
     }
 
     public static <E, A> List<E> copy(final List<E> source, final Executor<E> executor, final Keeper<E, A> keeper) {
-        final List<E> target = new ArrayList<E>();
+        final List<E> target = new ArrayList<>();
         if (source == null) {
             return target;
         }

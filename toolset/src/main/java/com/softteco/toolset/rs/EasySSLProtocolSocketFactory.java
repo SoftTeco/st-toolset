@@ -6,6 +6,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -43,7 +46,7 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
                     new TrustManager[]{new EasyX509TrustManager(null)},
                     null);
             return context;
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             LOG.error(e.getMessage(), e);
             throw new HttpClientError(e.toString());
         }
@@ -59,6 +62,7 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
     /**
      * @see SecureProtocolSocketFactory#createSocket(java.lang.String,int,java.net.InetAddress,int)
      */
+    @Override
     public Socket createSocket(
             String host,
             int port,
@@ -90,6 +94,7 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
      * @throws IOException if an I/O error occurs while creating the socket
      * @throws UnknownHostException if the IP address of the host cannot be determined
      */
+    @Override
     public Socket createSocket(
             final String host,
             final int port,
@@ -116,6 +121,7 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
     /**
      * @see SecureProtocolSocketFactory#createSocket(java.lang.String,int)
      */
+    @Override
     public Socket createSocket(String host, int port)
             throws IOException, UnknownHostException {
         return getSSLContext().getSocketFactory().createSocket(
@@ -126,6 +132,7 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
     /**
      * @see SecureProtocolSocketFactory#createSocket(java.net.Socket,java.lang.String,int,boolean)
      */
+    @Override
     public Socket createSocket(
             Socket socket,
             String host,
@@ -139,10 +146,12 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
                 autoClose);
     }
 
+    @Override
     public boolean equals(Object obj) {
         return ((obj != null) && obj.getClass().equals(EasySSLProtocolSocketFactory.class));
     }
 
+    @Override
     public int hashCode() {
         return EasySSLProtocolSocketFactory.class.hashCode();
     }

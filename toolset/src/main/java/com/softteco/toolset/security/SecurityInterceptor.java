@@ -20,7 +20,7 @@ public class SecurityInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(final MethodInvocation mi) throws Throwable {
-        final List<String> roles = new ArrayList<String>();
+        final List<String> roles = new ArrayList<>();
         if (mi.getMethod().getDeclaringClass().getAnnotation(AssertRoles.class) != null) {
             roles.addAll(Arrays.asList(mi.getMethod().getDeclaringClass().getAnnotation(AssertRoles.class).roles()));
         }

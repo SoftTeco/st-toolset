@@ -10,9 +10,7 @@ public abstract class AbstractAssembler<E, D> implements Assembler<E, D> {
     protected D newInstance() {
         try {
             return getDtoClass().newInstance();
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             throw new RuntimeException(e);
         }
     }

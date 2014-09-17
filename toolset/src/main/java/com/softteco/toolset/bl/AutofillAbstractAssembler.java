@@ -49,9 +49,7 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
                             throw new RuntimeException("Types are not equal: " + method.getReturnType().getSimpleName() + " vs " + each.getType().getSimpleName() + " " + each.getName(), e);
                         }
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace(System.out);
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace(System.out);
                 }
             } catch (NoSuchMethodException e) {
@@ -68,9 +66,7 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
 
                 try {
                     method.invoke(entity, each.get(dto));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace(System.out);
-                } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace(System.out);
                 }
             } catch (NoSuchMethodException e) {

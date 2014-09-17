@@ -14,7 +14,7 @@ public class QueryBuilder {
     private final StringBuilder queryBuilder = new StringBuilder();
     private final StringBuilder whereBuilder = new StringBuilder();
     private final StringBuilder orderByBuilder = new StringBuilder();
-    private final Map<String, Object> values = new HashMap<String, Object>();
+    private final Map<String, Object> values = new HashMap<>();
 
     public QueryBuilder(final String coreQuery) {
         queryBuilder.append(coreQuery);

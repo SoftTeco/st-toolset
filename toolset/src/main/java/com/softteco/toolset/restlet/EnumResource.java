@@ -4,7 +4,6 @@ import com.softteco.toolset.dto.PageDto;
 import java.util.Arrays;
 import java.util.List;
 import org.restlet.Restlet;
-import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
@@ -15,7 +14,7 @@ import org.restlet.resource.Post;
 public class EnumResource<E extends Enum> extends AbstractResource<UserSession> {
 
     public static <A extends Enum> Restlet build(final Class<A> a) {
-        return new ResourceBasedFinder(new EnumResource<A>(a));
+        return new ResourceBasedFinder(new EnumResource<>(a));
     }
     private final Class<E> enumClass;
 

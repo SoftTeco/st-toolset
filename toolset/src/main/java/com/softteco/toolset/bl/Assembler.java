@@ -24,7 +24,7 @@ public interface Assembler<E, D> {
         }
 
         public static <E, D> List<D> assemble(Collection<E> entities, Assembler<E, D> assembler) {
-            final List<D> dtos = new ArrayList<D>();
+            final List<D> dtos = new ArrayList<>();
             for (E each : entities) {
                 final D d = assembler.assemble(each);
                 if (d == null) {
@@ -36,7 +36,7 @@ public interface Assembler<E, D> {
         }
 
         public static <E, D> List<D> assemble(Collection<E> entities, Assembler<E, D> assembler, int limit, int offset) {
-            final List<D> dtos = new ArrayList<D>();
+            final List<D> dtos = new ArrayList<>();
             int added = 0;
             int current = 0;
             for (E each : entities) {

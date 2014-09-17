@@ -3,7 +3,6 @@ package com.softteco.toolset.restlet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.resource.Finder;
-import org.restlet.resource.Resource;
 import org.restlet.resource.ServerResource;
 
 /**

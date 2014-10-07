@@ -26,4 +26,15 @@ public abstract class AbstractApplicationInitializer extends GuiceServletContext
         sc.removeAttribute(Injector.class.getName());
         super.contextDestroyed(servletContextEvent);
     }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        super.contextInitialized(servletContextEvent);
+
+        final Injector injector = (Injector) servletContextEvent.getServletContext().getAttribute(Injector.class.getName());
+        init(injector);
+    }
+
+    protected void init(final Injector injector) {
+    }
 }

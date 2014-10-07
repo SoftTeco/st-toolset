@@ -9,6 +9,7 @@ import com.google.inject.servlet.ServletModule;
 import com.google.inject.servlet.SessionScoped;
 import com.softteco.toolset.mail.MailService;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
+import com.softteco.toolset.restlet.MobileUserSession;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.security.AssertRole;
 import com.softteco.toolset.security.AssertRoles;

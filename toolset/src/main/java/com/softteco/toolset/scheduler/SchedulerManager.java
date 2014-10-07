@@ -20,7 +20,7 @@ public class SchedulerManager {
     private static final Logger LOGGER = LogManager.getLogger(SchedulerManager.class.getName());
     private Scheduler scheduler;
 
-    private SchedulerManager() {
+    public SchedulerManager() {
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();

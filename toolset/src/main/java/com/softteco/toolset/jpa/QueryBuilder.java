@@ -1,6 +1,7 @@
 package com.softteco.toolset.jpa;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -38,6 +39,34 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder in(final String constraint, final String paramName, final List value) {
+        if (value == null) {
+            return this;
+        }
+
+        if (whereBuilder.length() > 0) {
+            whereBuilder.append(" and ");
+        }
+        
+        whereBuilder.append("(");
+        int i = 0;
+        for (Object valueObj : value) {
+            if(i++ != 0) {
+                whereBuilder.append(" OR ");
+            }
+            whereBuilder.append("(");
+            
+            final String newParamName = paramName + i;
+            whereBuilder.append(constraint.replaceAll(paramName, newParamName));
+            
+            values.put(paramName + i, valueObj);
+            whereBuilder.append(")");
+        }
+        whereBuilder.append(")");
+        
+        return this;
+    }
+        
     private String getQuery() {
         if (whereBuilder.length() > 0) {
             queryBuilder.append(" where ").append(whereBuilder);

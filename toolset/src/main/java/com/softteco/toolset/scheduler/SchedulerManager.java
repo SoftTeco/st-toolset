@@ -1,6 +1,7 @@
 package com.softteco.toolset.scheduler;
 
 import com.google.inject.Singleton;
+import java.util.Date;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.JobDetail;
@@ -23,6 +24,7 @@ public class SchedulerManager {
     public SchedulerManager() {
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
+            scheduler.clear();
             scheduler.start();
         } catch (SchedulerException e) {
             LOGGER.error("Problem with scheduler", e);
@@ -30,7 +32,7 @@ public class SchedulerManager {
     }
 
     public void addJob(final JobDetail jd) {
-        final Trigger trigger = TriggerBuilder.newTrigger().withIdentity(jd.getKey().getName()).startNow().build();
+        final Trigger trigger = TriggerBuilder.newTrigger().withIdentity(jd.getKey().getName()).startAt(new Date(System.currentTimeMillis() + 2000L)).build();
         addJob(jd, trigger);
     }
 

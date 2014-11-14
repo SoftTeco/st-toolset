@@ -3,12 +3,16 @@ package com.softteco.toolset.mail;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author serge
  */
 public abstract class AbstractMailServiceBean implements MailService {
+
+    private static final Logger LOGGER = LogManager.getLogger(AbstractMailServiceBean.class);
 
     private Email buildSimpleEmail() throws EmailException {
         Email email = new SimpleEmail();
@@ -17,10 +21,22 @@ public abstract class AbstractMailServiceBean implements MailService {
 
     protected abstract void configureEmail(Email email) throws EmailException;
 
+    protected String getHostName() {
+        return "smtp.googlemail.com";
+    }
+    
+    protected boolean isSSL() {
+        return true;
+    }
+    
+    protected int getSmtpPort() {
+        return isSSL() ? 465 : 2525;
+    }
+
     private Email configure(final Email email) throws EmailException {
-        email.setHostName("smtp.googlemail.com");
-        email.setSmtpPort(465);
-        email.setSSLOnConnect(true);
+        email.setHostName(getHostName());
+        email.setSmtpPort(getSmtpPort());
+        email.setSSLOnConnect(isSSL());
         configureEmail(email);
         return email;
     }
@@ -51,7 +67,7 @@ public abstract class AbstractMailServiceBean implements MailService {
             email.addTo(mail);
             email.send();
         } catch (EmailException e) {
-            e.printStackTrace(System.out);
+            LOGGER.error("Problem with sending email.", e);
         }
     }
 }

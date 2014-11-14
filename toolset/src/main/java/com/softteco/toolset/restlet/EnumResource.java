@@ -33,6 +33,6 @@ public class EnumResource<E extends Enum> extends AbstractResource<UserSession> 
 
     @Post("json")
     public PageDto<E> getValuesAsPage(final EnumTypeDto dto) {
-        return new PageDto<E>(null, Arrays.asList(getEnumClass().getEnumConstants()));
+        return new PageDto<>(null, Arrays.asList(getEnumClass().getEnumConstants()));
     }
 }

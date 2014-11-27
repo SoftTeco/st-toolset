@@ -114,11 +114,15 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     protected String getSessionId() {
         return getHttpServletRequest().getSession().getId();
     }
-
+    
     protected PageInfoDto getPageInfo() {
+        return getPageInfo(0, 20);
+    }
+
+    protected PageInfoDto getPageInfo(int pageNumber, int pageSize) {
         final PageInfoDto dto = new PageInfoDto();
-        dto.pageNumber = getIntParam("pageNumber", 0);
-        dto.pageSize = getIntParam("pageSize", 20);
+        dto.pageNumber = getIntParam("pageNumber", pageNumber);
+        dto.pageSize = getIntParam("pageSize", pageSize);
         
         List<SortInfoDto> sortInfoDtos = new ArrayList<>();
         addSortIfExists("", sortInfoDtos);

@@ -25,12 +25,19 @@ public interface Assembler<E, D> {
 
         public static <E, D> List<D> assemble(Collection<E> entities, Assembler<E, D> assembler) {
             final List<D> dtos = new ArrayList<>();
+            boolean sorted = false;
             for (E each : entities) {
                 final D d = assembler.assemble(each);
                 if (d == null) {
                     continue;
                 }
+                if (d instanceof Comparable) {
+                    sorted = true;
+                }
                 dtos.add(d);
+            }
+            if (sorted) {
+                Collections.sort((List<Comparable>)dtos);
             }
             return dtos;
         }

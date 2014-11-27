@@ -20,6 +20,14 @@ public class SecurityInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(final MethodInvocation mi) throws Throwable {
+        final List<String> users = new ArrayList<>();
+        if (mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class) != null) {
+            users.add(mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class).username());
+        }
+        if (!users.isEmpty() && !users.contains(userSessionProvider.get().getUsername())) {
+            throw new SecurityException("User doesn't have rights on calling this method.");
+        }
+
         final List<String> roles = new ArrayList<>();
         if (mi.getMethod().getDeclaringClass().getAnnotation(AssertRoles.class) != null) {
             roles.addAll(Arrays.asList(mi.getMethod().getDeclaringClass().getAnnotation(AssertRoles.class).roles()));
@@ -41,11 +49,7 @@ public class SecurityInterceptor implements MethodInterceptor {
             roles.add(methodAssertRole.role());
         }
 
-        if (roles.isEmpty()) {
-            throw new SecurityException("Roles are not specified. " + mi.getMethod() + " vs " + mi.getMethod().getDeclaringClass());
-        }
-
-        if (!userSessionProvider.get().hasRoles(roles)) {
+        if (!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles)) {
             throw new SecurityException("User doesn't have rights on calling this method. Requires " + Arrays.toString(roles.toArray(new String[0])));
         }
 

@@ -12,6 +12,13 @@ public class PageInfoDto implements Serializable {
     public int pageSize = 20;
     public SortInfoDto[] sort;
 
+    public PageInfoDto() {
+    }
+
+    public PageInfoDto(final int size) {
+        this.pageSize = size;
+    }
+
     public int getFirst() {
         return pageNumber * pageSize;
     }

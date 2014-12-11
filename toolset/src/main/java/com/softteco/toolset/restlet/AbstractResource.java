@@ -32,7 +32,10 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         getUserSession().setLang(this.getQueryValue("lang"));
 
         final PrincipalDto principalDto = PrincipalDto.build(getHttpServletRequest());
+        System.err.println("PRINCIPAL " + principalDto);
         if (principalDto != null) {
+            System.err.println("PRINCIPAL " + principalDto.username);
+            System.err.println("PRINCIPAL " + principalDto.roles);
             getUserSession().setUsername(principalDto.username);
             getUserSession().setRoles(principalDto.roles);
         }
@@ -114,7 +117,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     protected String getSessionId() {
         return getHttpServletRequest().getSession().getId();
     }
-    
+
     protected PageInfoDto getPageInfo() {
         return getPageInfo(0, 20);
     }
@@ -123,21 +126,21 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         final PageInfoDto dto = new PageInfoDto();
         dto.pageNumber = getIntParam("pageNumber", pageNumber);
         dto.pageSize = getIntParam("pageSize", pageSize);
-        
+
         List<SortInfoDto> sortInfoDtos = new ArrayList<>();
         addSortIfExists("", sortInfoDtos);
-        for(int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             addSortIfExists("" + i, sortInfoDtos);
         }
-        
-        if(!sortInfoDtos.isEmpty()) {
+
+        if (!sortInfoDtos.isEmpty()) {
             dto.sort = sortInfoDtos.toArray(new SortInfoDto[]{});
         }
         return dto;
     }
 
     private void addSortIfExists(String suffix, List<SortInfoDto> sortInfoDtos) {
-        if(getStringParam("sortParam" + suffix, null) != null) {
+        if (getStringParam("sortParam" + suffix, null) != null) {
             final SortInfoDto sortInfoDto = new SortInfoDto();
             sortInfoDto.sortParam = getStringParam("sortParam" + suffix, null);
             sortInfoDto.sortAsc = getBoolParam("sortAsc" + suffix, true);

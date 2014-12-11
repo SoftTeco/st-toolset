@@ -58,6 +58,7 @@ public abstract class AbstractUserSession implements UserSession {
 
     @Override
     public void setRoles(Set<String> roles) {
+        new Exception("setRoles " + roles).printStackTrace(System.out);
         this.roles = roles;
     }
 

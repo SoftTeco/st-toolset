@@ -20,6 +20,7 @@ public class SecurityInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(final MethodInvocation mi) throws Throwable {
+        System.out.println("CURRENT USER: " + userSessionProvider.get().getUsername() + " " + userSessionProvider.get().isLoggedIn() + " " + Arrays.toString(userSessionProvider.get().getRoles().toArray(new String[0])));
         final List<String> users = new ArrayList<>();
         if (mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class) != null) {
             users.add(mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class).username());

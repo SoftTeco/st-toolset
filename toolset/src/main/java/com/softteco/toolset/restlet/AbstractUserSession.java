@@ -42,9 +42,6 @@ public abstract class AbstractUserSession implements UserSession {
     @Override
     public void setUsername(String username) {
         if (this.username != null && !this.username.equals(username)) {
-            System.out.println("PROBLEM with setting username: " + this.username + " vs " + username + ". So cleanup session.");
-
-            System.out.println("cleanup roles");
             this.roles = null;
             cleanup();
         }
@@ -58,7 +55,6 @@ public abstract class AbstractUserSession implements UserSession {
 
     @Override
     public void setRoles(Set<String> roles) {
-        new Exception("setRoles " + roles).printStackTrace(System.out);
         this.roles = roles;
     }
 
@@ -86,6 +82,14 @@ public abstract class AbstractUserSession implements UserSession {
     public boolean hasRoles(List<String> roles) {
         if (roles == null || roles.isEmpty()) {
             return true;
+        }
+        
+        if (!isLoggedIn()) {
+            throw new SecurityException("User is not logged in.");
+        }
+        
+        if (this.roles == null || this.roles.isEmpty()) {
+            return false;
         }
 
         for (String each : roles) {

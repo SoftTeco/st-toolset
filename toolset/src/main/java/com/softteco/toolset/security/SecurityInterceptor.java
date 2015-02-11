@@ -17,18 +17,17 @@ public class SecurityInterceptor implements MethodInterceptor {
 
     @Inject
     private Provider<UserSession> userSessionProvider;
-
+    
     @Override
     public Object invoke(final MethodInvocation mi) throws Throwable {
         System.out.println("CURRENT USER: " + userSessionProvider.get().getUsername() + " " + userSessionProvider.get().isLoggedIn() + " " + Arrays.toString(userSessionProvider.get().getRoles().toArray(new String[0])));
-        final List<String> users = new ArrayList<>();
-        if (mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class) != null) {
-            users.add(mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class).username());
-        }
-        if (!users.isEmpty() && !users.contains(userSessionProvider.get().getUsername())) {
-            throw new SecurityException("User doesn't have rights on calling this method.");
-        }
+        handleAssertAuthorizedUser(mi);
+        handleAssertUser(mi);
+        handleAssertRoles(mi);
+        return mi.proceed();
+    }
 
+    private void handleAssertRoles(final MethodInvocation mi) throws SecurityException {
         final List<String> roles = new ArrayList<>();
         if (mi.getMethod().getDeclaringClass().getAnnotation(AssertRoles.class) != null) {
             roles.addAll(Arrays.asList(mi.getMethod().getDeclaringClass().getAnnotation(AssertRoles.class).roles()));
@@ -53,7 +52,31 @@ public class SecurityInterceptor implements MethodInterceptor {
         if (!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles)) {
             throw new SecurityException("User doesn't have rights on calling this method. Requires " + Arrays.toString(roles.toArray(new String[0])));
         }
+    }
 
-        return mi.proceed();
+    private void handleAssertUser(final MethodInvocation mi) throws SecurityException {
+        final List<String> users = new ArrayList<>();
+        if (mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class) != null) {
+            users.add(mi.getMethod().getDeclaringClass().getAnnotation(AssertUser.class).username());
+        }
+        if (mi.getMethod().getAnnotation(AssertUser.class) != null) {
+            users.add(mi.getMethod().getAnnotation(AssertUser.class).username());
+        }
+        if (!users.isEmpty() && !users.contains(userSessionProvider.get().getUsername())) {
+            throw new SecurityException("User doesn't have rights on calling this method.");
+        }
+    }
+
+    private void handleAssertAuthorizedUser(final MethodInvocation mi) {
+        boolean sholdBeLoggedIn = false;
+        if (mi.getMethod().getDeclaringClass().getAnnotation(AssertAuthorizedUser.class) != null) {
+            sholdBeLoggedIn = true;
+        }
+        if (mi.getMethod().getAnnotation(AssertAuthorizedUser.class) != null) {
+            sholdBeLoggedIn = true;
+        }
+        if (sholdBeLoggedIn && !userSessionProvider.get().isLoggedIn()) {
+            throw new SecurityException("User is not logged in.");
+        }
     }
 }

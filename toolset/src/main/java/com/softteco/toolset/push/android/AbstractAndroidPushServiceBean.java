@@ -32,18 +32,22 @@ public abstract class AbstractAndroidPushServiceBean implements PushService {
 
     private ResponseDto execute(final RequestDto requestDto) {
         PostMethod postMethod = null;
+        String response = null;
         try {
-            postMethod = new PostMethod();
+            postMethod = new PostMethod("/gcm/send");
             postMethod.addRequestHeader("Content-Type", "application/json");
+            postMethod.addRequestHeader("Accept", "application/json");
             postMethod.addRequestHeader("Authorization", "key=" + getKey());
 
             postMethod.setRequestEntity(new StringRequestEntity(objectMapper.writeValueAsString(requestDto), "application/json", "utf-8"));
             getClient().executeMethod(postMethod);
 
-            return objectMapper.readValue(postMethod.getResponseBodyAsString(), ResponseDto.class);
+            return objectMapper.readValue(response = postMethod.getResponseBodyAsString(), ResponseDto.class);
         } catch (UnsupportedEncodingException e) {
+            System.out.println("RESPONSE: " + response);
             throw new RuntimeException(e);
         } catch (IOException e) {
+            System.out.println("RESPONSE: " + response);
             throw new RuntimeException(e);
         } finally {
             if (postMethod != null) {

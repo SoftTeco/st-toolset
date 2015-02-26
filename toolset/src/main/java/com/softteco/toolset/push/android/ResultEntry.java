@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class ResultEntry implements Serializable {
 
-    public Long message_id;
+    public String message_id;
     public String registration_id;
     public String error;
 }

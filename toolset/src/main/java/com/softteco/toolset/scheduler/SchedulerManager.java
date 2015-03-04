@@ -16,8 +16,9 @@ import org.quartz.impl.StdSchedulerFactory;
  * @author serge
  */
 @Singleton
-public class SchedulerManager {
+public final class SchedulerManager {
 
+    private static final int TWO_SECS = 2000;
     private static final Logger LOGGER = LogManager.getLogger(SchedulerManager.class.getName());
     private Scheduler scheduler;
 
@@ -32,7 +33,8 @@ public class SchedulerManager {
     }
 
     public void addJob(final JobDetail jd) {
-        final Trigger trigger = TriggerBuilder.newTrigger().withIdentity(jd.getKey().getName()).startAt(new Date(System.currentTimeMillis() + 2000L)).build();
+        final Trigger trigger = TriggerBuilder.newTrigger().withIdentity(jd.getKey().getName()).
+                startAt(new Date(System.currentTimeMillis() + TWO_SECS)).build();
         addJob(jd, trigger);
     }
 

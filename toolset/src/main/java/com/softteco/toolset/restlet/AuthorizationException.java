@@ -4,7 +4,7 @@ package com.softteco.toolset.restlet;
  *
  * @author serge
  */
-public class AuthorizationException extends Exception {
+public final class AuthorizationException extends Exception {
 
     private AuthorizationStatus authorizationStatus;
 
@@ -12,13 +12,13 @@ public class AuthorizationException extends Exception {
         this(AuthorizationStatus.NOT_LOGGED_IN);
     }
 
-    public AuthorizationException(AuthorizationStatus authorizationStatus) {
-        this.authorizationStatus = authorizationStatus;
+    public AuthorizationException(final AuthorizationStatus newAuthorizationStatus) {
+        this.authorizationStatus = newAuthorizationStatus;
     }
 
-    public AuthorizationException(final AuthorizationStatus authorizationStatus, final String message) {
+    public AuthorizationException(final AuthorizationStatus newAuthorizationStatus, final String message) {
         super(message);
-        this.authorizationStatus = authorizationStatus;
+        this.authorizationStatus = newAuthorizationStatus;
     }
 
     public AuthorizationStatus getAuthorizationStatus() {

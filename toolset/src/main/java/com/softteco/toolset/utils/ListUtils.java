@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author serge
  */
-public class ListUtils {
+public final class ListUtils {
 
     public static <E> List<E> copy(final List<E> source, final Executor<E> executor) {
         return copy(source, executor, null);
@@ -34,6 +34,9 @@ public class ListUtils {
         return target;
     }
 
+    private ListUtils() {
+    }
+
     public interface Executor<E> {
 
         E transform(E source);
@@ -45,7 +48,7 @@ public class ListUtils {
 
         public abstract A handle(E source);
 
-        public A get() {
+        public final A get() {
             return a;
         }
     }

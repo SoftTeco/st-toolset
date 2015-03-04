@@ -17,10 +17,10 @@ public class PrincipalDto implements Serializable {
 
     public static PrincipalDto build(final HttpServletRequest httpServletRequest) {
         final PrincipalDto dto = new PrincipalDto();
-        if(httpServletRequest == null) {
+        if (httpServletRequest == null) {
             return dto;
         }
-        
+
         final Principal principal = httpServletRequest.getUserPrincipal();
         if (principal == null) {
             return null;
@@ -40,7 +40,7 @@ public class PrincipalDto implements Serializable {
         if (roles == null) {
             return null;
         }
-        return new HashSet<String>(Arrays.asList(roles));
+        return new HashSet<>(Arrays.asList(roles));
     }
 
     public String username;

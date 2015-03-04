@@ -9,21 +9,21 @@ import org.restlet.resource.ServerResource;
  *
  * @author serge
  */
-public class ResourceBasedFinder extends Finder {
+public final class ResourceBasedFinder extends Finder {
 
     private final ServerResource resource;
 
-    public ResourceBasedFinder(ServerResource resource) {
-        this.resource = resource;
+    public ResourceBasedFinder(final ServerResource newResource) {
+        this.resource = newResource;
     }
 
     @Override
-    public ServerResource create(Class<? extends ServerResource> targetClass, Request request, Response response) {
+    public ServerResource create(final Class<? extends ServerResource> targetClass, final Request request, final Response response) {
         return resource;
     }
 
     @Override
-    public ServerResource create(Request request, Response response) {
+    public ServerResource create(final Request request, final Response response) {
         return create(null, request, response);
     }
 }

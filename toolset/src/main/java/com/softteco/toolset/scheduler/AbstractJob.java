@@ -13,7 +13,7 @@ public class AbstractJob implements Job {
 
     public static final String INJECTOR = "injector";
 
-    protected Injector getInjector(final JobExecutionContext jec) {
+    protected final Injector getInjector(final JobExecutionContext jec) {
         return (Injector) jec.getJobDetail().getJobDataMap().get(INJECTOR);
     }
 

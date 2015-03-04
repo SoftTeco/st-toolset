@@ -16,19 +16,19 @@ public abstract class AbstractApplicationInitializer extends GuiceServletContext
     protected abstract Module[] getModules();
 
     @Override
-    protected Injector getInjector() {
+    protected final Injector getInjector() {
         return Guice.createInjector(getModules());
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         final ServletContext sc = servletContextEvent.getServletContext();
         sc.removeAttribute(Injector.class.getName());
         super.contextDestroyed(servletContextEvent);
     }
 
     @Override
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
+    public void contextInitialized(final ServletContextEvent servletContextEvent) {
         super.contextInitialized(servletContextEvent);
 
         final Injector injector = (Injector) servletContextEvent.getServletContext().getAttribute(Injector.class.getName());

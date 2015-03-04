@@ -13,17 +13,17 @@ import org.aopalliance.intercept.MethodInvocation;
  *
  * @author serge
  */
-public class SecurityInterceptor implements MethodInterceptor {
+public final class SecurityInterceptor implements MethodInterceptor {
 
     @Inject
     private Provider<UserSession> userSessionProvider;
-    
+
     @Override
     public Object invoke(final MethodInvocation mi) throws Throwable {
         System.out.println("CURRENT USER: " + userSessionProvider.get().getUsername() + " " + userSessionProvider.get().isLoggedIn());
         handleAssertAuthorizedUser(mi);
         handleAssertUser(mi);
-        
+
         System.out.println("ROLES: " + Arrays.toString(userSessionProvider.get().getRoles().toArray(new String[0])));
         handleAssertRoles(mi);
         return mi.proceed();

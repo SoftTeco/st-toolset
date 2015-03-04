@@ -6,11 +6,11 @@ package com.softteco.toolset.jpa;
  */
 public class DataNotFoundException extends Exception {
 
-    public DataNotFoundException(String message, Throwable cause) {
+    public DataNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public DataNotFoundException(String message) {
+    public DataNotFoundException(final String message) {
         super(message);
     }
 }

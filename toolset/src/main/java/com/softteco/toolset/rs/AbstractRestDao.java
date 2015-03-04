@@ -10,17 +10,19 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
  * @author serge
  */
 public abstract class AbstractRestDao {
+    private static final int HTTP_PORT = 80;
+    private static final int HTTPS_PORT = 443;
 
     private HttpClient httpClient;
 
     protected abstract String getHost();
 
-    protected int getPort() {
+    protected final int getPort() {
         if (getProtocol().equals("http")) {
-            return 80;
+            return HTTP_PORT;
         }
         if (getProtocol().equals("https")) {
-            return 443;
+            return HTTPS_PORT;
         }
         throw new RuntimeException("Please reload this method.");
     }
@@ -33,10 +35,10 @@ public abstract class AbstractRestDao {
         return false;
     }
 
-    public HttpClient getClient() {
+    protected final HttpClient getClient() {
         if (httpClient == null) {
             if (allowToUseSelfSignedCertificates()) {
-                Protocol easyhttps = new Protocol("https", (ProtocolSocketFactory) new EasySSLProtocolSocketFactory(), 443);
+                Protocol easyhttps = new Protocol("https", (ProtocolSocketFactory) new EasySSLProtocolSocketFactory(), HTTPS_PORT);
                 Protocol.registerProtocol("https", easyhttps);
             }
 

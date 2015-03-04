@@ -7,14 +7,14 @@ import com.google.inject.Provider;
  *
  * @author serge
  */
-public class MailProcessorProvider  implements Provider<MailProcessor> {
+public class MailProcessorProvider implements Provider<MailProcessor> {
 
     @Inject
     private MailService mailService;
 
     @Override
-    public MailProcessor get() {
+    public final MailProcessor get() {
         return new MultiMailProcessor(mailService);
     }
-    
+
 }

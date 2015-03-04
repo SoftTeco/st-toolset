@@ -13,8 +13,8 @@ import java.util.List;
 public interface Assembler<E, D> {
 
     public static class Utils {
-        
-        public static <E, D> List<D> assemble(Collection<E> entities, Assembler<E, D> assembler, Comparator<D> comparator) {
+
+        public static <E, D> List<D> assemble(final Collection<E> entities, final Assembler<E, D> assembler, final Comparator<D> comparator) {
             final List<D> dtos = assemble(entities, assembler);
             if (comparator != null) {
                 Collections.sort(dtos, comparator);
@@ -22,7 +22,7 @@ public interface Assembler<E, D> {
             return dtos;
         }
 
-        public static <E, D> List<D> assemble(Collection<E> entities, Assembler<E, D> assembler) {
+        public static <E, D> List<D> assemble(final Collection<E> entities, final Assembler<E, D> assembler) {
             final List<D> dtos = new ArrayList<>();
             boolean sorted = false;
             for (E each : entities) {
@@ -36,12 +36,12 @@ public interface Assembler<E, D> {
                 dtos.add(d);
             }
             if (sorted) {
-                Collections.sort((List<Comparable>)dtos);
+                Collections.sort((List<Comparable>) dtos);
             }
             return dtos;
         }
 
-        public static <E, D> List<D> assemble(Collection<E> entities, Assembler<E, D> assembler, int limit, int offset) {
+        public static <E, D> List<D> assemble(final Collection<E> entities, final Assembler<E, D> assembler, final int limit, final int offset) {
             final List<D> dtos = new ArrayList<>();
             int added = 0;
             int current = 0;
@@ -64,9 +64,6 @@ public interface Assembler<E, D> {
             return dtos;
         }
     }
-//static <E, T> List<T> assemble(final List<E> entities, Assembler<E,T> assembler) {
-//        
-//    }    
 
     D assemble(E entity);
 

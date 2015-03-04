@@ -10,16 +10,17 @@ import org.restlet.resource.Post;
 /**
  *
  * @author serge
+ * @param <E>
  */
-public class EnumResource<E extends Enum> extends AbstractResource<UserSession> {
+public final class EnumResource<E extends Enum> extends AbstractResource<UserSession> {
 
     public static <A extends Enum> Restlet build(final Class<A> a) {
         return new ResourceBasedFinder(new EnumResource<>(a));
     }
     private final Class<E> enumClass;
 
-    public EnumResource(Class<E> enumClass) {
-        this.enumClass = enumClass;
+    public EnumResource(final Class<E> newEnumClass) {
+        this.enumClass = newEnumClass;
     }
 
     private Class<E> getEnumClass() {

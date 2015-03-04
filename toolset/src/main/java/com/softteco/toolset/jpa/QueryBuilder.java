@@ -10,7 +10,7 @@ import javax.persistence.Query;
  *
  * @author serge
  */
-public class QueryBuilder {
+public final class QueryBuilder {
 
     private final StringBuilder queryBuilder = new StringBuilder();
     private final StringBuilder whereBuilder = new StringBuilder();
@@ -47,45 +47,45 @@ public class QueryBuilder {
         if (whereBuilder.length() > 0) {
             whereBuilder.append(" and ");
         }
-        
+
         whereBuilder.append("(");
         int i = 0;
         for (Object valueObj : value) {
-            if(i++ != 0) {
+            if (i++ != 0) {
                 whereBuilder.append(" OR ");
             }
             whereBuilder.append("(");
-            
+
             final String newParamName = paramName + i;
             whereBuilder.append(constraint.replaceAll(paramName, newParamName));
-            
+
             values.put(paramName + i, valueObj);
             whereBuilder.append(")");
         }
         whereBuilder.append(")");
-        
+
         return this;
     }
-        
+
     private String getQuery() {
         if (whereBuilder.length() > 0) {
             queryBuilder.append(" where ").append(whereBuilder);
         }
-        if(orderByBuilder.length() > 0) {
+        if (orderByBuilder.length() > 0) {
             queryBuilder.append(" ").append(orderByBuilder);
         }
         return queryBuilder.toString();
     }
-    
-    public void append(String queryPart) {
+
+    public void append(final String queryPart) {
         queryBuilder.append(queryPart);
     }
 
-    public void orderBy(String orderBy) {
+    public void orderBy(final String orderBy) {
         orderByBuilder.append(orderBy);
     }
 
-    public Query build(EntityManager entityManager) {
+    public Query build(final EntityManager entityManager) {
         final Query query = entityManager.createQuery(getQuery());
         for (String each : values.keySet()) {
             query.setParameter(each, values.get(each));

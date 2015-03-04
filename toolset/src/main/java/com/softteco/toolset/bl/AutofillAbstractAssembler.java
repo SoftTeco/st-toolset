@@ -23,7 +23,7 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
     }
 
     @Override
-    public void assemble(D dto, E entity) {
+    public void assemble(final D dto, final E entity) {
         if (entity == null) {
             return;
         }
@@ -43,11 +43,12 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
                         each.set(dto, method.invoke(entity));
                     } else {
                         try {
-                            final Method methodInAssembler = this.getClass().getMethod("get" + each.getName().substring(0, 1).toUpperCase() + each.getName().substring(1), getEntityClass());
+                            final Method methodInAssembler = this.getClass().getMethod("get" + each.getName().substring(0, 1).toUpperCase()
+                                    + each.getName().substring(1), getEntityClass());
                             each.set(dto, methodInAssembler.invoke(this, entity));
                         } catch (NoSuchMethodException e) {
-                            System.out.println("Types are not equal: " + method.getReturnType().getSimpleName() + " vs " + each.getType().getSimpleName() + " " + each.getName());
-                            continue;
+                            System.out.println("Types are not equal: " + method.getReturnType().getSimpleName() + " vs "
+                                    + each.getType().getSimpleName() + " " + each.getName());
                         }
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -59,11 +60,12 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
         }
     }
 
-    public void disassemble(E entity, D dto) {
+    public void disassemble(final E entity, final D dto) {
         final Class entityClass = entity.getClass();
         for (Field each : getDtoClass().getFields()) {
             try {
-                final Method method = entityClass.getMethod("set" + each.getName().substring(0, 1).toUpperCase() + each.getName().substring(1), each.getType());
+                final Method method = entityClass.getMethod("set" + each.getName().substring(0, 1).toUpperCase() + each.getName().substring(1),
+                        each.getType());
 
                 try {
                     method.invoke(entity, each.get(dto));

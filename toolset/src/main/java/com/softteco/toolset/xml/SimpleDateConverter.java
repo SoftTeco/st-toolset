@@ -22,7 +22,7 @@ public class SimpleDateConverter extends DateConverter {
         if (str == null || str.isEmpty()) {
             return null;
         }
-        
+
         try {
             return dateFormat.parse(str);
         } catch (ParseException e) {

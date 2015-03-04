@@ -22,8 +22,8 @@ public abstract class FileUploadServlet extends HttpServlet {
 
     protected abstract String getFolder();
 
-    public File getFile(final String uuid) {
-        return new File(getFolder() + "/" + uuid);
+    public final File getFile(final String fileName) {
+        return new File(getFolder() + "/" + fileName);
     }
 
     public String buildFileName(final FileItem fileItem) {
@@ -41,7 +41,7 @@ public abstract class FileUploadServlet extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("FILE UPLOAD!!!");
-        
+
         String fileName = null;
         try {
             final FileItemFactory fileItemFactory = new DiskFileItemFactory(1000000, new File(getFolder()));
@@ -54,7 +54,8 @@ public abstract class FileUploadServlet extends HttpServlet {
                 }
 
                 try {
-                    final File file = getFile(fileName = getFileName(item));
+                    fileName = getFileName(item);
+                    final File file = getFile(fileName);
                     item.write(file);
                     fileUploaded(item, file, req);
                 } catch (Exception e) {

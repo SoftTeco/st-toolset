@@ -4,26 +4,26 @@ package com.softteco.toolset.mail;
  *
  * @author serge
  */
-public class OneMailProcessor implements MailProcessor {
+public final class OneMailProcessor implements MailProcessor {
 
     private final MailService mailService;
     private int count = 0;
     private String subject;
-    private StringBuilder bodyBuilder = new StringBuilder();
+    private final StringBuilder bodyBuilder = new StringBuilder();
 
-    public OneMailProcessor(MailService mailService) {
-        this.mailService = mailService;
+    public OneMailProcessor(final MailService newMailService) {
+        this.mailService = newMailService;
     }
 
     @Override
-    public void add(final String email, final String subject, final String body) {
-        this.subject = subject;
-        bodyBuilder.append(subject).append("\n").append(body).append("\n\n");
+    public void add(final String email, final String newSubject, final String body) {
+        this.subject = newSubject;
+        bodyBuilder.append(newSubject).append("\n").append(body).append("\n\n");
         count++;
     }
 
     @Override
-    public void add(MailTemplate template) {
+    public void add(final MailTemplate template) {
         add(template.getTo(), template.getSubject(), template.getBody());
     }
 

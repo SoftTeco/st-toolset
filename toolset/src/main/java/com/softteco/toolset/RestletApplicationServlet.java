@@ -10,13 +10,13 @@ import org.restlet.ext.servlet.ServerServlet;
  *
  * @author serge
  */
-public class RestletApplicationServlet extends ServerServlet {
+public final class RestletApplicationServlet extends ServerServlet {
 
     @Inject
     private Provider<Application> applicationProvider;
 
     @Override
-    protected Application createApplication(Context parentContext) {
+    protected Application createApplication(final Context parentContext) {
         return applicationProvider.get();
     }
 }

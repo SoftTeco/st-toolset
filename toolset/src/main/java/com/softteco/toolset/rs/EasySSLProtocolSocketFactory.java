@@ -19,24 +19,9 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- *
- * @author serge
- */
-public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory {
+public final class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory {
 
-    /**
-     * Log object for this class.
-     */
     private static final Log LOG = LogFactory.getLog(EasySSLProtocolSocketFactory.class);
-    private SSLContext sslcontext = null;
-
-    /**
-     * Constructor for EasySSLProtocolSocketFactory.
-     */
-    public EasySSLProtocolSocketFactory() {
-        super();
-    }
 
     private static SSLContext createEasySSLContext() {
         try {
@@ -51,6 +36,11 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
             throw new HttpClientError(e.toString());
         }
     }
+    private SSLContext sslcontext = null;
+
+    public EasySSLProtocolSocketFactory() {
+        super();
+    }
 
     private SSLContext getSSLContext() {
         if (this.sslcontext == null) {
@@ -59,95 +49,46 @@ public class EasySSLProtocolSocketFactory implements SecureProtocolSocketFactory
         return this.sslcontext;
     }
 
-    /**
-     * @see SecureProtocolSocketFactory#createSocket(java.lang.String,int,java.net.InetAddress,int)
-     */
     @Override
-    public Socket createSocket(
-            String host,
-            int port,
-            InetAddress clientHost,
-            int clientPort)
+    public Socket createSocket(final String host, final int port, final InetAddress clientHost, final int clientPort) 
             throws IOException, UnknownHostException {
-
-        return getSSLContext().getSocketFactory().createSocket(
-                host,
-                port,
-                clientHost,
-                clientPort);
+        return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
     }
 
-    /**
-     * Attempts to get a new socket connection to the given host within the given time limit. <p> To circumvent the
-     * limitations of older JREs that do not support connect timeout a controller thread is executed. The controller
-     * thread attempts to create a new socket within the given limit of time. If socket constructor does not return
-     * until the timeout expires, the controller terminates and throws an {@link ConnectTimeoutException} </p>
-     *
-     * @param host the host name/IP
-     * @param port the port on the host
-     * @param clientHost the local host name/IP to bind the socket to
-     * @param clientPort the port on the local machine
-     * @param params {@link HttpConnectionParams Http connection parameters}
-     *
-     * @return Socket a new socket
-     *
-     * @throws IOException if an I/O error occurs while creating the socket
-     * @throws UnknownHostException if the IP address of the host cannot be determined
-     */
     @Override
-    public Socket createSocket(
-            final String host,
-            final int port,
-            final InetAddress localAddress,
-            final int localPort,
+    public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, 
             final HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
         if (params == null) {
             throw new IllegalArgumentException("Parameters may not be null");
         }
-        int timeout = params.getConnectionTimeout();
-        SocketFactory socketfactory = getSSLContext().getSocketFactory();
+
+        final int timeout = params.getConnectionTimeout();
+        final SocketFactory socketFactory = getSSLContext().getSocketFactory();
         if (timeout == 0) {
-            return socketfactory.createSocket(host, port, localAddress, localPort);
-        } else {
-            Socket socket = socketfactory.createSocket();
-            SocketAddress localaddr = new InetSocketAddress(localAddress, localPort);
-            SocketAddress remoteaddr = new InetSocketAddress(host, port);
-            socket.bind(localaddr);
-            socket.connect(remoteaddr, timeout);
-            return socket;
+            return socketFactory.createSocket(host, port, localAddress, localPort);
         }
+
+        final Socket socket = socketFactory.createSocket();
+        final SocketAddress localaddr = new InetSocketAddress(localAddress, localPort);
+        final SocketAddress remoteaddr = new InetSocketAddress(host, port);
+        socket.bind(localaddr);
+        socket.connect(remoteaddr, timeout);
+        return socket;
     }
 
-    /**
-     * @see SecureProtocolSocketFactory#createSocket(java.lang.String,int)
-     */
     @Override
-    public Socket createSocket(String host, int port)
+    public Socket createSocket(final String host, final int port) throws IOException, UnknownHostException {
+        return getSSLContext().getSocketFactory().createSocket(host, port);
+    }
+
+    @Override
+    public Socket createSocket(final Socket socket, final String host, final int port, final boolean autoClose)
             throws IOException, UnknownHostException {
-        return getSSLContext().getSocketFactory().createSocket(
-                host,
-                port);
-    }
-
-    /**
-     * @see SecureProtocolSocketFactory#createSocket(java.net.Socket,java.lang.String,int,boolean)
-     */
-    @Override
-    public Socket createSocket(
-            Socket socket,
-            String host,
-            int port,
-            boolean autoClose)
-            throws IOException, UnknownHostException {
-        return getSSLContext().getSocketFactory().createSocket(
-                socket,
-                host,
-                port,
-                autoClose);
+        return getSSLContext().getSocketFactory().createSocket(socket, host, port, autoClose);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return ((obj != null) && obj.getClass().equals(EasySSLProtocolSocketFactory.class));
     }
 

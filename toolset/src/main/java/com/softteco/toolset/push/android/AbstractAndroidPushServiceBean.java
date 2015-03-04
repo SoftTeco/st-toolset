@@ -2,11 +2,10 @@ package com.softteco.toolset.push.android;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softteco.toolset.push.PushService;
+import com.softteco.toolset.rs.AbstractRestDao;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
@@ -14,20 +13,20 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
  *
  * @author sergeizenevich
  */
-public abstract class AbstractAndroidPushServiceBean implements PushService {
+public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao implements PushService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private HttpClient httpClient;
 
     protected abstract String getKey();
 
-    public HttpClient getClient() {
-        if (httpClient == null) {
-            httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-            httpClient.getHostConfiguration().setHost("android.googleapis.com", 443, "https");
-        }
+    @Override
+    protected final String getHost() {
+        return "android.googleapis.com";
+    }
 
-        return httpClient;
+    @Override
+    protected final String getProtocol() {
+        return "https";
     }
 
     private ResponseDto execute(final RequestDto requestDto) {
@@ -42,7 +41,8 @@ public abstract class AbstractAndroidPushServiceBean implements PushService {
             postMethod.setRequestEntity(new StringRequestEntity(objectMapper.writeValueAsString(requestDto), "application/json", "utf-8"));
             getClient().executeMethod(postMethod);
 
-            return objectMapper.readValue(response = postMethod.getResponseBodyAsString(), ResponseDto.class);
+            response = postMethod.getResponseBodyAsString();
+            return objectMapper.readValue(response, ResponseDto.class);
         } catch (UnsupportedEncodingException e) {
             System.out.println("RESPONSE: " + response);
             throw new RuntimeException(e);
@@ -57,7 +57,7 @@ public abstract class AbstractAndroidPushServiceBean implements PushService {
     }
 
     @Override
-    public boolean sendMessage(final String to, final Object data) {
+    public final boolean sendMessage(final String to, final Object data) {
         final RequestDto requestDto = new RequestDto();
         requestDto.registration_ids = new ArrayList<>();
         requestDto.registration_ids.add(to);

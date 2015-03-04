@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 public abstract class AbstractMailServiceBean implements MailService {
 
     private static final Logger LOGGER = LogManager.getLogger(AbstractMailServiceBean.class);
+    private static final int SSL_MAIL_PORT = 465;
+    private static final int MAIL_PORT = 2525;
 
     private Email buildSimpleEmail() throws EmailException {
         Email email = new SimpleEmail();
@@ -24,13 +26,13 @@ public abstract class AbstractMailServiceBean implements MailService {
     protected String getHostName() {
         return "smtp.googlemail.com";
     }
-    
+
     protected boolean isSSL() {
         return true;
     }
-    
-    protected int getSmtpPort() {
-        return isSSL() ? 465 : 2525;
+
+    protected final int getSmtpPort() {
+        return isSSL() ? SSL_MAIL_PORT : MAIL_PORT;
     }
 
     private Email configure(final Email email) throws EmailException {
@@ -59,7 +61,7 @@ public abstract class AbstractMailServiceBean implements MailService {
     }
 
     @Override
-    public void send(String mail, String subject, String body) {
+    public void send(final String mail, final String subject, final String body) {
         try {
             final Email email = buildSimpleEmail();
             email.setSubject(subject);

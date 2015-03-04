@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
 public @interface AssertRoles {
 
     String[] roles();
-    
+
     boolean append() default false;
 }

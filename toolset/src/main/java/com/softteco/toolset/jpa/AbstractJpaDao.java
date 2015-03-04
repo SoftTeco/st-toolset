@@ -9,17 +9,23 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author serge
+ * @param <Entity>
+ * @param <Id>
  */
 public abstract class AbstractJpaDao<Entity, Id> {
+
+    private static final Logger LOGGER = LogManager.getLogger(AbstractJpaDao.class);
 
     @Inject
     private Provider<EntityManager> emProvider;
 
-    protected Class<Entity> getEntityClass() {
+    protected final Class<Entity> getEntityClass() {
         final ParameterizedType superclass;
         if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
             superclass = (ParameterizedType) getClass().getGenericSuperclass();
@@ -35,11 +41,11 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return "";
     }
 
-    protected List<Entity> getResultList(final Query query) {
+    protected final List<Entity> getResultList(final Query query) {
         return query.getResultList();
     }
 
-    protected List<Entity> getResultList(final Query query, final PageInfoDto page) {
+    protected final List<Entity> getResultList(final Query query, final PageInfoDto page) {
         if (page.isPaggable()) {
             query.setMaxResults(page.pageSize + 1);
             query.setFirstResult(page.getFirst());
@@ -47,7 +53,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return query.getResultList();
     }
 
-    protected Entity getSingleResultWithException(final Query query) throws DataNotFoundException {
+    protected final Entity getSingleResultWithException(final Query query) throws DataNotFoundException {
         final List<Entity> list = getResultList(query);
         if (list.isEmpty()) {
             throw new DataNotFoundException("Data was not found.");
@@ -55,7 +61,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return list.get(0);
     }
 
-    protected Entity getSingleResult(final Query query) {
+    protected final Entity getSingleResult(final Query query) {
         final List<Entity> list = getResultList(query);
         if (list.isEmpty()) {
             return null;
@@ -63,19 +69,19 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return list.get(0);
     }
 
-    public EntityManager getEntityManager() {
+    protected final EntityManager getEntityManager() {
         return emProvider.get();
     }
 
-    public EntityTransaction getTransaction() {
+    public final EntityTransaction getTransaction() {
         return getEntityManager().getTransaction();
     }
 
-    public Entity getReference(final Id key) {
+    public final Entity getReference(final Id key) {
         return getEntityManager().getReference(getEntityClass(), key);
     }
 
-    public Entity findById(final Id key) throws DataNotFoundException {
+    public final Entity findById(final Id key) throws DataNotFoundException {
         final Entity entity = getEntityManager().find(getEntityClass(), key);
         if (entity == null) {
             throw new DataNotFoundException("Entity " + getEntityClass() + " was not found for key: " + key);
@@ -83,7 +89,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return entity;
     }
 
-    public List<Entity> findAll() {
+    public final List<Entity> findAll() {
         final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getSimpleName()).append(" e");
         if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
             queryBuilder.append(" order by e.").append(getOrderProperty());
@@ -92,37 +98,37 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return getResultList(query);
     }
 
-    public List<Entity> findAll(final PageInfoDto page) {
+    public final List<Entity> findAll(final PageInfoDto page) {
         final StringBuilder queryBuilder = new StringBuilder("select e from ").append(getEntityClass().getSimpleName()).append(" e");
         queryBuilder.append(getOrderBy(page));
         final Query query = getEntityManager().createQuery(queryBuilder.toString());
         return getResultList(query, page);
     }
 
-    public void persist(final Entity entity) {
+    public final void persist(final Entity entity) {
         getEntityManager().persist(entity);
     }
 
-    public void persistAll(final List<Entity> entities) {
+    public final void persistAll(final List<Entity> entities) {
         for (Entity each : entities) {
             persist(each);
         }
     }
 
-    public Entity merge(final Entity entity) {
+    public final Entity merge(final Entity entity) {
         return getEntityManager().merge(entity);
     }
 
-    public void remove(final Entity entity) {
+    public final void remove(final Entity entity) {
         try {
             getEntityManager().refresh(entity);
         } catch (RuntimeException e) {
-            // do nothing...
+            LOGGER.error("Problem with refreshing... " + entity, e);
         }
         getEntityManager().remove(entity);
     }
 
-    protected String getOrderBy(final PageInfoDto page) {
+    protected final String getOrderBy(final PageInfoDto page) {
         final StringBuilder queryBuilder = new StringBuilder();
         if (page.sort != null && page.sort.length > 0) {
             queryBuilder.append(" order by ");
@@ -131,7 +137,10 @@ public abstract class AbstractJpaDao<Entity, Id> {
                 if (i > 0) {
                     queryBuilder.append(",");
                 }
-                queryBuilder.append("e.").append(sortParam.sortParam).append(" ").append(sortParam.sortAsc ? "asc" : "desc");
+                queryBuilder.append("e.");
+                queryBuilder.append(sortParam.sortParam);
+                queryBuilder.append(" ");
+                queryBuilder.append(sortParam.sortAsc ? "asc" : "desc");
             }
         } else if (getOrderProperty() != null && !getOrderProperty().isEmpty()) {
             queryBuilder.append(" order by e.").append(getOrderProperty());

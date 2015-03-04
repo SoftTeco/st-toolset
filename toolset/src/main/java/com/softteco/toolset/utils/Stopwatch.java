@@ -4,7 +4,8 @@ package com.softteco.toolset.utils;
  *
  * @author serge
  */
-public class Stopwatch {
+public final class Stopwatch {
+    private static final int ONE_SEC = 1000;
 
     private final long started = System.currentTimeMillis();
     private long lapStarted = -1;
@@ -16,7 +17,7 @@ public class Stopwatch {
     }
 
     public long lapInSeconds() {
-        return (long) (lapInMillis() / 1000);
+        return (long) (lapInMillis() / ONE_SEC);
     }
 
     public long getTimeInMillis() {
@@ -24,6 +25,6 @@ public class Stopwatch {
     }
 
     public long getTimeInSeconds() {
-        return (long) (getTimeInMillis() / 1000);
+        return (long) (getTimeInMillis() / ONE_SEC);
     }
 }

@@ -23,7 +23,7 @@ public abstract class AbstractXmlProcessor implements XmlProcessor {
 
     private final Set<Class> supportedClasses = new HashSet<>();
 
-    protected void addSupportedClass(final Class beanClass) {
+    protected final void addSupportedClass(final Class beanClass) {
         supportedClasses.add(beanClass);
     }
 
@@ -37,10 +37,10 @@ public abstract class AbstractXmlProcessor implements XmlProcessor {
         NameCoder replacer = new NoNameCoder();
         final XStream xStream = new XStream(new XppDriver(replacer)) {
             @Override
-            protected MapperWrapper wrapMapper(MapperWrapper next) {
+            protected MapperWrapper wrapMapper(final MapperWrapper next) {
                 return new MapperWrapper(next) {
                     @Override
-                    public boolean shouldSerializeMember(Class definedIn, String fieldName) {
+                    public boolean shouldSerializeMember(final Class definedIn, final String fieldName) {
                         if (definedIn == Object.class) {
                             return false;
                         }
@@ -56,12 +56,12 @@ public abstract class AbstractXmlProcessor implements XmlProcessor {
     }
 
     @Override
-    public <E extends Serializable> E fromXml(final String xml, final Class<E> beanClass) {
+    public final <E extends Serializable> E fromXml(final String xml, final Class<E> beanClass) {
         return (E) validate(getXStream().fromXML(xml));
     }
 
     @Override
-    public <E extends Serializable> String toXml(final E bean) {
+    public final <E extends Serializable> String toXml(final E bean) {
         final StringWriter sw = new StringWriter();
         final PrettyPrintWriter cwriter = new NoTagsEscapePrintWriter(sw);
         getXStream().marshal(bean, cwriter);

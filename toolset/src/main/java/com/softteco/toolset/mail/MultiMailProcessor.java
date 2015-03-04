@@ -4,13 +4,13 @@ package com.softteco.toolset.mail;
  *
  * @author serge
  */
-public class MultiMailProcessor implements MailProcessor {
+public final class MultiMailProcessor implements MailProcessor {
 
     private final MailService mailService;
     private int count;
 
-    public MultiMailProcessor(MailService mailService) {
-        this.mailService = mailService;
+    public MultiMailProcessor(final MailService newMailService) {
+        this.mailService = newMailService;
     }
 
     @Override

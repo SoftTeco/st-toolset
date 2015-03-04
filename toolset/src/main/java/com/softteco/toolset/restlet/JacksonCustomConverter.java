@@ -12,23 +12,9 @@ import org.restlet.representation.Representation;
  *
  * @author serge
  */
-public class JacksonCustomConverter extends JacksonConverter {
+public final class JacksonCustomConverter extends JacksonConverter {
 
     private ObjectMapper mapper = null;
-
-    @Override
-    protected <T> JacksonRepresentation<T> create(MediaType mediaType, T source) {
-        final JacksonRepresentation jr = new JacksonRepresentation<>(mediaType, source);
-        jr.setObjectMapper(getObjectMapper());
-        return jr;
-    }
-
-    @Override
-    protected <T> JacksonRepresentation<T> create(Representation source, Class<T> objectClass) {
-        final JacksonRepresentation jr = new JacksonRepresentation<>(source, objectClass);
-        jr.setObjectMapper(getObjectMapper());
-        return jr;
-    }
 
     public ObjectMapper getObjectMapper() {
         if (mapper == null) {
@@ -41,5 +27,19 @@ public class JacksonCustomConverter extends JacksonConverter {
         final JsonFactory jsonFactory = new JsonFactory();
         jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
         return new ObjectMapper(jsonFactory);
+    }
+
+    @Override
+    protected <T> JacksonRepresentation<T> create(final MediaType mediaType, final T source) {
+        final JacksonRepresentation jr = new JacksonRepresentation<>(mediaType, source);
+        jr.setObjectMapper(getObjectMapper());
+        return jr;
+    }
+
+    @Override
+    protected <T> JacksonRepresentation<T> create(final Representation source, final Class<T> objectClass) {
+        final JacksonRepresentation jr = new JacksonRepresentation<>(source, objectClass);
+        jr.setObjectMapper(getObjectMapper());
+        return jr;
     }
 }

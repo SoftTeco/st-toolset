@@ -21,6 +21,7 @@ import org.junit.Test;
  * @author serge
  */
 public abstract class AbstractPersistenceTest {
+
     @Inject
     private Provider<EntityManager> emProvider;
 
@@ -34,29 +35,29 @@ public abstract class AbstractPersistenceTest {
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     protected abstract String getPersistModuleName();
 
     @Before
-    public void setUp() {
+    public final void setUp() {
         final Injector injector = Guice.createInjector(new JpaPersistModule(getPersistModuleName()));
         injector.injectMembers(this);
-        
+
         final PersistService persistService = injector.getInstance(PersistService.class);
         persistService.start();
     }
 
     @After
-    public void tearDown() {
-        
+    public final void tearDown() {
+
     }
 
     @Test
-    public void testFindById() throws Exception {
+    public final void testFindById() throws Exception {
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("proxy-test");
         Assert.assertNotNull(emFactory);
         Assert.assertNotNull(emFactory.createEntityManager());
-        
+
         Assert.assertNotNull(emProvider);
         Assert.assertNotNull(emProvider.get());
     }

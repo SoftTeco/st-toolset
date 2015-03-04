@@ -7,19 +7,19 @@ import java.io.Writer;
  *
  * @author serge
  */
-public class NoTagsEscapePrintWriter extends PrettyPrintWriter {
+public final class NoTagsEscapePrintWriter extends PrettyPrintWriter {
 
-    public NoTagsEscapePrintWriter(Writer writer) {
+    public NoTagsEscapePrintWriter(final Writer writer) {
         super(writer);
     }
 
     @Override
-    public String encodeNode(String name) {
+    public String encodeNode(final String name) {
         return name; // super.encodeNode(name);
     }
 
     @Override
-    public String encodeAttribute(String name) {
+    public String encodeAttribute(final String name) {
         return name; // super.encodeNode(name);
     }
 }

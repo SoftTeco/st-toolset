@@ -11,17 +11,17 @@ public abstract class AbstractEnumConverter implements SingleValueConverter {
     protected abstract Class<? extends Enum> getEnumClass();
 
     @Override
-    public boolean canConvert(final Class type) {
+    public final boolean canConvert(final Class type) {
         return type.equals(getEnumClass());
     }
 
     @Override
-    public String toString(final Object obj) {
+    public final String toString(final Object obj) {
         return obj.toString();
     }
 
     @Override
-    public Object fromString(final String str) {
+    public final Object fromString(final String str) {
         return Enum.valueOf(getEnumClass(), str.toUpperCase());
     }
 }

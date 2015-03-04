@@ -7,12 +7,12 @@ import java.util.List;
  *
  * @author serge
  */
-public class XmlValidationException extends RuntimeException {
+public final class XmlValidationException extends RuntimeException {
 
     private final List<String> errors;
 
-    public XmlValidationException(final List<String> errors) {
-        this.errors = errors;
+    public XmlValidationException(final List<String> newErrors) {
+        this.errors = newErrors;
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.google.inject.servlet.ServletModule;
 import com.google.inject.servlet.SessionScoped;
 import com.softteco.toolset.mail.MailService;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
-import com.softteco.toolset.restlet.MobileUserSession;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.security.AssertAuthorizedUser;
 import com.softteco.toolset.security.AssertRole;
@@ -47,11 +46,11 @@ public abstract class AbstractApplicationModule extends ServletModule {
 
         configureApplication();
     }
-    
+
     protected Class<? extends MailService> getMailServiceClass() {
         return null;
     }
-    
+
     protected void configureSecurity() {
         final SecurityInterceptor securityInterceptor = new SecurityInterceptor();
         requestInjection(securityInterceptor);
@@ -64,7 +63,7 @@ public abstract class AbstractApplicationModule extends ServletModule {
         bindInterceptor(Matchers.annotatedWith(AssertUser.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertAuthorizedUser.class), Matchers.any(), securityInterceptor);
     }
-    
+
     private void configureMailService() {
         if (getMailServiceClass() != null) {
             bind(MailService.class).to(getMailServiceClass());
@@ -79,11 +78,11 @@ public abstract class AbstractApplicationModule extends ServletModule {
 
     protected void configureApplication() {
     }
-    
+
     protected Class<? extends XmlProcessor> getXmlProcessor() {
         return null;
     }
-    
+
     protected void configureXmlProcessor() {
         if (getXmlProcessor() != null) {
             bind(XmlProcessor.class).to(getXmlProcessor());

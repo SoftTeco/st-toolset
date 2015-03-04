@@ -6,7 +6,7 @@ import com.thoughtworks.xstream.converters.basic.DoubleConverter;
  *
  * @author serge
  */
-public class NullDoubleConverter extends DoubleConverter {
+public final class NullDoubleConverter extends DoubleConverter {
 
     @Override
     public Object fromString(final String str) {

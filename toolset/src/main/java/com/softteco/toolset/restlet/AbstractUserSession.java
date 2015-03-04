@@ -14,7 +14,7 @@ public abstract class AbstractUserSession implements UserSession {
     private String username;
     private Set<String> roles;
 
-    public PrincipalDto getPrincipal() {
+    public final PrincipalDto getPrincipal() {
         final PrincipalDto dto = new PrincipalDto();
         dto.username = username;
         dto.roles = roles;
@@ -22,77 +22,77 @@ public abstract class AbstractUserSession implements UserSession {
     }
 
     @Override
-    public String getLang() {
+    public final String getLang() {
         return lang;
     }
 
     @Override
-    public void setLang(String lang) {
-        if (lang == null || lang.isEmpty()) {
+    public final void setLang(final String newLang) {
+        if (newLang == null || newLang.isEmpty()) {
             return;
         }
-        this.lang = lang;
+        this.lang = newLang;
     }
 
     @Override
-    public String getUsername() {
+    public final String getUsername() {
         return username;
     }
 
     @Override
-    public void setUsername(String username) {
-        if (this.username != null && !this.username.equals(username)) {
+    public final void setUsername(final String newUsername) {
+        if (this.username != null && !this.username.equals(newUsername)) {
             this.roles = null;
             cleanup();
         }
-        this.username = username;
+        this.username = newUsername;
     }
 
     @Override
-    public Set<String> getRoles() {
+    public final Set<String> getRoles() {
         return roles;
     }
 
     @Override
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
+    public final void setRoles(final Set<String> newRoles) {
+        this.roles = newRoles;
     }
 
-    public void assertRole(final String role) {
-        assertRoles(role);
+    public final void assertRole(final String roleForCheck) {
+        assertRoles(roleForCheck);
     }
 
-    public void assertRoles(final String... roles) {
-        if (!hasRoles(roles)) {
-            throw new SecurityException("User [" + getUsername() + "] doesn't have roles: " + Arrays.toString(roles));
+    public final void assertRoles(final String... rolesForCheck) {
+        if (!hasRoles(rolesForCheck)) {
+            throw new SecurityException("User [" + getUsername() + "] doesn't have roles: " + Arrays.toString(rolesForCheck));
         }
     }
 
     @Override
-    public boolean hasRole(String role) {
-        return hasRoles(role);
+    public final boolean hasRole(final String roleForCheck) {
+        return hasRoles(roleForCheck);
     }
 
     @Override
-    public boolean hasRoles(String... roles) {
-        return hasRoles(Arrays.asList(roles));
+    public final boolean hasRoles(final String... rolesForCheck) {
+        return hasRoles(Arrays.asList(rolesForCheck));
     }
 
     @Override
-    public boolean hasRoles(List<String> roles) {
-        if (roles == null || roles.isEmpty()) {
+    public final boolean hasRoles(final List<String> rolesForCheck) {
+        if (rolesForCheck == null || rolesForCheck.isEmpty()) {
             return true;
         }
-        
+
         if (!isLoggedIn()) {
             throw new SecurityException("User is not logged in.");
         }
-        
+
         if (this.roles == null || this.roles.isEmpty()) {
             return false;
         }
 
-        for (String each : roles) {
+        for (String each : rolesForCheck) {
             if (this.roles.contains(each)) {
                 return true;
             }
@@ -104,11 +104,11 @@ public abstract class AbstractUserSession implements UserSession {
     protected abstract void cleanup();
 
     @Override
-    public boolean isLoggedIn() {
+    public final boolean isLoggedIn() {
         return username != null;
     }
 
-    protected void checkOnLogin() {
+    protected final void checkOnLogin() {
         if (!isLoggedIn()) {
             System.out.println("cleanup roles");
             this.roles = null;

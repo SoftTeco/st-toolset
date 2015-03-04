@@ -14,8 +14,10 @@ import org.restlet.ext.servlet.ServletUtils;
 /**
  *
  * @author serge
+ * @param <S>
  */
 public abstract class AbstractResource<S extends UserSession> extends SelfInjectingServerResource {
+    private static final int MAX_NUMBER_OF_SORT_PARAMS = 10;
 
     @Inject
     private Provider<UserSession> userSessionProvider;
@@ -41,27 +43,27 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         }
     }
 
-    protected S getUserSession() {
+    protected final S getUserSession() {
         return (S) userSessionProvider.get();
     }
 
-    protected HttpServletRequest getHttpServletRequest() {
+    protected final HttpServletRequest getHttpServletRequest() {
         return ServletUtils.getRequest(this.getRequest());
     }
 
-    protected HttpSession getHttpSession() {
+    protected final HttpSession getHttpSession() {
         return getHttpServletRequest().getSession();
     }
 
-    protected void removeFromSession(final String key) {
+    protected final void removeFromSession(final String key) {
         getHttpSession().removeAttribute(key);
     }
 
-    protected void addToSession(final String key, final Object value) {
+    protected final void addToSession(final String key, final Object value) {
         getHttpSession().setAttribute(key, value);
     }
 
-    protected double getDoubleParam(String name, Double defaultValue) {
+    protected final double getDoubleParam(final String name, final Double defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
             return defaultValue;
@@ -70,7 +72,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return Double.parseDouble(param);
     }
 
-    protected boolean getBoolParam(final String name, final boolean defaultValue) {
+    protected final boolean getBoolParam(final String name, final boolean defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
             return defaultValue;
@@ -79,7 +81,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return Boolean.parseBoolean(param);
     }
 
-    protected String getStringParam(final String name, final String defaultValue) {
+    protected final String getStringParam(final String name, final String defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
             return defaultValue;
@@ -88,7 +90,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return param;
     }
 
-    protected Integer getIntParam(final String name, final Integer defaultValue) {
+    protected final Integer getIntParam(final String name, final Integer defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
             return defaultValue;
@@ -97,7 +99,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return Integer.parseInt(param);
     }
 
-    protected Long getLongParam(final String name, final Long defaultValue) {
+    protected final Long getLongParam(final String name, final Long defaultValue) {
         final String param = getQuery().getValues(name);
         if (param == null) {
             return defaultValue;
@@ -106,7 +108,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return Long.parseLong(param);
     }
 
-    protected String getCurrentUsername() throws AuthorizationException {
+    protected final String getCurrentUsername() throws AuthorizationException {
         try {
             return getHttpServletRequest().getUserPrincipal().getName();
         } catch (NullPointerException e) {
@@ -114,22 +116,22 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         }
     }
 
-    protected String getSessionId() {
+    protected final String getSessionId() {
         return getHttpServletRequest().getSession().getId();
     }
 
     protected PageInfoDto getPageInfo() {
-        return getPageInfo(0, 20);
+        return getPageInfo(PageInfoDto.DEFAULT_PAGE, PageInfoDto.DEFAULT_PAGE_SIZE);
     }
-
-    protected PageInfoDto getPageInfo(int pageNumber, int pageSize) {
+    
+    protected final PageInfoDto getPageInfo(final int pageNumber, final int pageSize) {
         final PageInfoDto dto = new PageInfoDto();
         dto.pageNumber = getIntParam("pageNumber", pageNumber);
         dto.pageSize = getIntParam("pageSize", pageSize);
 
-        List<SortInfoDto> sortInfoDtos = new ArrayList<>();
+        final List<SortInfoDto> sortInfoDtos = new ArrayList<>();
         addSortIfExists("", sortInfoDtos);
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= MAX_NUMBER_OF_SORT_PARAMS; i++) {
             addSortIfExists("" + i, sortInfoDtos);
         }
 
@@ -139,7 +141,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         return dto;
     }
 
-    private void addSortIfExists(String suffix, List<SortInfoDto> sortInfoDtos) {
+    private void addSortIfExists(final String suffix, final List<SortInfoDto> sortInfoDtos) {
         if (getStringParam("sortParam" + suffix, null) != null) {
             final SortInfoDto sortInfoDto = new SortInfoDto();
             sortInfoDto.sortParam = getStringParam("sortParam" + suffix, null);

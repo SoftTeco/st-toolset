@@ -20,11 +20,15 @@ import org.restlet.service.StatusService;
 public class AbstractStatusService extends StatusService {
 
     @Override
-    public Status getStatus(final Throwable throwable, final Request request, final Response response) {
+    public final Status getStatus(final Throwable throwable, final Request request, final Response response) {
         return new Status(getStatus(super.getStatus(throwable, request, response), throwable), throwable);
     }
 
     private Status getStatus(final Status status, final Throwable throwable) {
+        if (throwable instanceof SecurityException) {
+            return Status.CLIENT_ERROR_UNAUTHORIZED;
+        }
+
         if (throwable instanceof AuthorizationException) {
             final AuthorizationException authorizationException = (AuthorizationException) throwable;
             if (authorizationException.getAuthorizationStatus() == AuthorizationStatus.NOT_LOGGED_IN) {
@@ -48,21 +52,21 @@ public class AbstractStatusService extends StatusService {
     protected Status getStatus(final Throwable throwable) {
         return null;
     }
-    
+
     private String getMessage(final Throwable throwable) {
         if (throwable == null) {
             return "Server errors";
         }
-        
+
         if (throwable instanceof ResourceException) {
             return getMessage(throwable.getCause());
         }
-        
+
         return throwable.getMessage();
     }
 
     @Override
-    public Representation getRepresentation(final Status status, final Request request, final Response response) {
+    public final Representation getRepresentation(final Status status, final Request request, final Response response) {
         try {
             final JSONObject jsono = new JSONObject();
             jsono.put("message", getMessage(status.getThrowable()));

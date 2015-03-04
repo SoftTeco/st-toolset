@@ -6,12 +6,12 @@ import com.thoughtworks.xstream.converters.basic.LongConverter;
  *
  * @author serge
  */
-public class NullLongConverter extends LongConverter {
+public final class NullLongConverter extends LongConverter {
 
     @Override
     public Object fromString(final String str) {
         if (str == null || str.isEmpty()) {
-            return 0l;
+            return 0L;
         }
 
         return super.fromString(str);

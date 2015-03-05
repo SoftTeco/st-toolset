@@ -17,6 +17,7 @@ import org.restlet.ext.servlet.ServletUtils;
  * @param <S>
  */
 public abstract class AbstractResource<S extends UserSession> extends SelfInjectingServerResource {
+
     private static final int MAX_NUMBER_OF_SORT_PARAMS = 10;
 
     @Inject
@@ -123,7 +124,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     protected PageInfoDto getPageInfo() {
         return getPageInfo(PageInfoDto.DEFAULT_PAGE, PageInfoDto.DEFAULT_PAGE_SIZE);
     }
-    
+
     protected final PageInfoDto getPageInfo(final int pageNumber, final int pageSize) {
         final PageInfoDto dto = new PageInfoDto();
         dto.pageNumber = getIntParam("pageNumber", pageNumber);

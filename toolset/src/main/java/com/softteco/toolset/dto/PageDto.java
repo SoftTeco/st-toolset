@@ -12,7 +12,7 @@ public class PageDto<Dto extends Serializable> extends PageInfoDto implements Se
 
     public boolean hasNext;
     public List<Dto> lines;
-    
+
     public PageDto() {
     }
 

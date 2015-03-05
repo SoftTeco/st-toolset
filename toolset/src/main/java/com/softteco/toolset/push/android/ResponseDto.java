@@ -1,5 +1,6 @@
 package com.softteco.toolset.push.android;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,9 +10,11 @@ import java.util.List;
  */
 public class ResponseDto implements Serializable {
 
-    public Long multicast_id;
+    @JsonProperty(value = "multicast_id")
+    public Long multicastId;
     public Long success;
     public Long failure;
-    public Long canonical_ids;
-    public List<ResultEntry> results;
+    @JsonProperty(value = "canonical_ids")
+    public Long canonicalIds;
+    public List<ResultEntryDto> results;
 }

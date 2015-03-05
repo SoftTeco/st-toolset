@@ -38,6 +38,15 @@
 
         <property name="basedir" value="${basedir}"/>
     -->
+    <module name="SuppressionFilter">
+	    <property name="file" value="reporting/suppressions.xml"/>
+	</module>
+	<module name="SuppressWithNearbyCommentFilter"/>
+	<module name="SuppressionCommentFilter">
+	    <property name="offCommentFormat" value="BEGIN GENERATED CODE"/>
+    	<property name="onCommentFormat" value="END GENERATED CODE"/>
+		<property name="checkFormat" value=".*"/>
+	</module>
 
     <!-- property name="fileExtensions" value="java, properties, xml"/ -->
 
@@ -79,6 +88,7 @@
     <!-- </module> -->
 
     <module name="TreeWalker">
+    	<module name="SuppressWarningsHolder" />
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
@@ -143,6 +153,9 @@
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
         <module name="EmptyBlock"/>
+        <module name="EmptyCatchBlock">
+    		<property name="commentFormat" value="do nothing"/>
+		</module>
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
@@ -152,10 +165,16 @@
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+        	<property name="ignoreConstructorParameter" value="true"/>
+        	<property name="ignoreSetter" value="true"/>
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <module name="MagicNumber">
+        	<property name="ignoreHashCodeMethod" value="true"/>
+        	<property name="ignoreAnnotation" value="true"/>
+        </module>
         <module name="MissingSwitchDefault"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>

@@ -50,13 +50,13 @@ public final class EasySSLProtocolSocketFactory implements SecureProtocolSocketF
     }
 
     @Override
-    public Socket createSocket(final String host, final int port, final InetAddress clientHost, final int clientPort) 
+    public Socket createSocket(final String host, final int port, final InetAddress clientHost, final int clientPort)
             throws IOException, UnknownHostException {
         return getSSLContext().getSocketFactory().createSocket(host, port, clientHost, clientPort);
     }
 
     @Override
-    public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort, 
+    public Socket createSocket(final String host, final int port, final InetAddress localAddress, final int localPort,
             final HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
         if (params == null) {
             throw new IllegalArgumentException("Parameters may not be null");

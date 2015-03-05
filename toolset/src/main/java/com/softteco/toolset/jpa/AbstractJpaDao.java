@@ -63,6 +63,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
 
     protected final Entity getSingleResult(final Query query) {
         final List<Entity> list = getResultList(query);
+        LOGGER.error("Found " + list.size() + " records");
         if (list.isEmpty()) {
             return null;
         }

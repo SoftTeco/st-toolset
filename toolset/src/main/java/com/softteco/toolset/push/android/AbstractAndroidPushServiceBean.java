@@ -59,8 +59,8 @@ public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao imp
     @Override
     public final boolean sendMessage(final String to, final Object data) {
         final RequestDto requestDto = new RequestDto();
-        requestDto.registration_ids = new ArrayList<>();
-        requestDto.registration_ids.add(to);
+        requestDto.registrationIds = new ArrayList<>();
+        requestDto.registrationIds.add(to);
         requestDto.data = data;
 
         return execute(requestDto).success > 0;

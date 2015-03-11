@@ -55,7 +55,7 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
                     e.printStackTrace(System.out);
                 }
             } catch (NoSuchMethodException e) {
-                System.out.println("Skipped field " + each.getName());
+                System.out.println("Skipped field " + dto.getClass().getName() + "." + each.getName());
             }
         }
     }

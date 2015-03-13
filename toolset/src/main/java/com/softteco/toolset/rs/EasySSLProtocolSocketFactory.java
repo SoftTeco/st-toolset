@@ -89,7 +89,7 @@ public final class EasySSLProtocolSocketFactory implements SecureProtocolSocketF
 
     @Override
     public boolean equals(final Object obj) {
-        return ((obj != null) && obj.getClass().equals(EasySSLProtocolSocketFactory.class));
+        return obj != null && obj.getClass().equals(EasySSLProtocolSocketFactory.class);
     }
 
     @Override

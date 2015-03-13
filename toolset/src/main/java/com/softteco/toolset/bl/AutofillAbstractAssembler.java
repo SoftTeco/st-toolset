@@ -30,6 +30,10 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
 
         final Class entityClass = entity.getClass();
         for (Field each : getDtoClass().getFields()) {
+            if (each.getAnnotation(SkipAutoFill.class) != null) {
+                continue;
+            }
+
             try {
                 final Method method;
                 if (each.getType().equals(boolean.class)) {

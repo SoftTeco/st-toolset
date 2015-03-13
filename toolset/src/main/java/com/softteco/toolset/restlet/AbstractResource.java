@@ -24,11 +24,6 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
     private Provider<UserSession> userSessionProvider;
 
     @Override
-    protected void doCatch(final Throwable throwable) {
-        super.doCatch(throwable);
-    }
-
-    @Override
     protected void doInit() {
         super.doInit();
 

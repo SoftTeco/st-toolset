@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface Assembler<E, D> {
 
-    public static class Utils {
+    final class Utils {
 
         public static <E, D> List<D> assemble(final Collection<E> entities, final Assembler<E, D> assembler, final Comparator<D> comparator) {
             final List<D> dtos = assemble(entities, assembler);
@@ -62,6 +62,9 @@ public interface Assembler<E, D> {
                 added++;
             }
             return dtos;
+        }
+
+        private Utils() {
         }
     }
 

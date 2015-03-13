@@ -55,13 +55,13 @@ public final class EasyX509TrustManager implements X509TrustManager {
      */
     @Override
     public void checkServerTrusted(final X509Certificate[] certificates, final String authType) throws CertificateException {
-        if ((certificates != null) && LOG.isDebugEnabled()) {
+        if (certificates != null && LOG.isDebugEnabled()) {
             LOG.debug("Server certificate chain:");
             for (int i = 0; i < certificates.length; i++) {
                 LOG.debug("X509Certificate[" + i + "]=" + certificates[i]);
             }
         }
-        if ((certificates != null) && (certificates.length == 1)) {
+        if (certificates != null && certificates.length == 1) {
             certificates[0].checkValidity();
         } else {
             standardTrustManager.checkServerTrusted(certificates, authType);

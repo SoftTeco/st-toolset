@@ -16,8 +16,10 @@ import com.softteco.toolset.security.AssertRoles;
 import com.softteco.toolset.security.AssertUser;
 import com.softteco.toolset.security.SecurityInterceptor;
 import com.softteco.toolset.xml.XmlProcessor;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -120,9 +122,11 @@ public abstract class AbstractApplicationModule extends ServletModule {
             return;
         }
 
+        Reader propertiesFileReader = null;
         try {
             final Properties properties = new Properties();
-            properties.load(new FileReader(getPropertiesPath()));
+            propertiesFileReader = new InputStreamReader(new FileInputStream(getPropertiesPath()), "UTF-8");
+            properties.load(propertiesFileReader);
 
             for (String eachKey : getDefaultProperties().stringPropertyNames()) {
                 if (properties.containsKey(eachKey)) {
@@ -135,6 +139,14 @@ public abstract class AbstractApplicationModule extends ServletModule {
             Names.bindProperties(binder(), properties);
         } catch (IOException e) {
             throw new RuntimeException("Can't load config file", e);
+        } finally {
+            if (propertiesFileReader != null) {
+                try {
+                    propertiesFileReader.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't close reader", e);
+                }
+            }
         }
     }
 }

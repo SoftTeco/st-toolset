@@ -86,6 +86,11 @@
                         <phase>verify</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <rulesets>
+                        <ruleset>/reporting/pdm.xml</ruleset>
+                    </rulesets>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

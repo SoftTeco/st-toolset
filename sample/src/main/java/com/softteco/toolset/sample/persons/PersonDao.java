@@ -13,6 +13,5 @@ public interface PersonDao {
 
     List<PersonEntity> findAll(PageInfoDto pageInfo);
 
-    public void persist(PersonEntity entity);
-    
+    void persist(PersonEntity entity);
 }

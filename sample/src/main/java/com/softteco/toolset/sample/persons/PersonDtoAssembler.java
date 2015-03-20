@@ -1,28 +1,16 @@
 package com.softteco.toolset.sample.persons;
 
-import com.softteco.toolset.bl.AbstractAssembler;
+import com.softteco.toolset.bl.AutofillAbstractAssembler;
 
 /**
  *
  * @author serge
  */
-public class PersonDtoAssembler extends AbstractAssembler<PersonEntity, PersonDto> {
+public class PersonDtoAssembler extends AutofillAbstractAssembler<PersonEntity, PersonDto> {
 
-    @Override
-    protected Class<PersonDto> getDtoClass() {
-        return PersonDto.class;
-    }
-
-    @Override
-    public void assemble(final PersonDto dto, final PersonEntity entity) {
-        dto.account = entity.getAccount();
-        dto.name = entity.getName();
-    }
-
-    PersonEntity disassemble(PersonDto dto) {
+    PersonEntity disassemble(final PersonDto dto) {
         final PersonEntity entity = new PersonEntity();
-        entity.setAccount(dto.account);
-        entity.setName(dto.name);
+        disassemble(entity, dto);
         return entity;
     }
 }

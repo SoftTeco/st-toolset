@@ -17,7 +17,7 @@ public class RestletApplication extends AbstractRestletApplication {
     }
 
     @Override
-    protected void createInboundRoot(Router router) {
+    protected void createInboundRoot(final Router router) {
         router.attach("/persons", PersonsResource.class);
     }
 }

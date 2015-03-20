@@ -6,7 +6,17 @@
     <groupId>com.softteco.toolset</groupId>
     <artifactId>sample</artifactId>
     <packaging>war</packaging>
-    <name>Sample</name>    
+    <name>Sample</name>
+    <properties>
+        <!-- Reporting library versions -->
+        <reporting.checkstyle.plugin>2.14</reporting.checkstyle.plugin>
+        <reporting.pmd.plugin>3.4</reporting.pmd.plugin>
+        <reporting.findbugs.plugin>3.0.0</reporting.findbugs.plugin>
+        <reporting.javancss.plugin>2.1</reporting.javancss.plugin>
+        <reporting.cobertura.plugin>2.6</reporting.cobertura.plugin>
+        
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+    </properties> 
     <build>
         <plugins>
             <plugin>
@@ -14,14 +24,90 @@
                 <version>2.3.2</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${reporting.checkstyle.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle-compile</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configLocation>reporting/checkstyle.xml</configLocation>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>6.4</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${reporting.pmd.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>pmd-compile</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                    <execution>
+                        <id>cpd-compile</id>
+                        <goals>
+                            <goal>cpd-check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rulesets>
+                        <ruleset>/reporting/pdm.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${reporting.findbugs.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>findbugs-compile</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${reporting.cobertura.plugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>5.0.3</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
@@ -94,8 +180,5 @@
             <url>http://maven.restlet.org</url>  
         </repository> 
     </repositories>
-    <properties>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
-    </properties>
 </project>
 

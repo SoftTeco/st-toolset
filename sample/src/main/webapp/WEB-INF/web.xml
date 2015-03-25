@@ -13,29 +13,9 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <welcome-file-list>
-        <welcome-file>home/home.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <jsp-config>
-        <jsp-property-group>
-            <url-pattern>/public/*</url-pattern>
-            <url-pattern>/time/*</url-pattern>
-            <url-pattern>/projects/*</url-pattern>
-            <url-pattern>/persons/*</url-pattern>
-            <url-pattern>/reports/*</url-pattern>
-            <url-pattern>/home/*</url-pattern>
-            <url-pattern>/bank/*</url-pattern>
-            <url-pattern>/expenses/*</url-pattern>
-            <url-pattern>/error.jsp</url-pattern>
-            <include-prelude>/header.jsp</include-prelude>
-            <include-coda>/footer.jsp</include-coda>
-        </jsp-property-group>
-    </jsp-config>
-    
-    <session-config>
-        <session-timeout>15</session-timeout>
-    </session-config>
-    
     <error-page>
         <error-code>403</error-code>
         <location>/error.jsp</location>

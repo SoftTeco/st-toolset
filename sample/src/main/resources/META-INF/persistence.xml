@@ -7,9 +7,9 @@
     <properties>
       <!--<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>-->
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql:statics"/>
-      <property name="javax.persistence.jdbc.user" value="statics"/>
-      <property name="javax.persistence.jdbc.password" value="12345678"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql:sample"/>
+      <property name="javax.persistence.jdbc.user" value="sample"/>
+      <property name="javax.persistence.jdbc.password" value="sample"/>
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
       <property name="eclipselink.ddl-generation.output-mode" value="database"/>
       <!--<property name="eclipselink.logging.file" value="eclipselink.log"/>

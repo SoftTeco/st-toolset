@@ -12,7 +12,7 @@ public class ApplicationModule extends AbstractApplicationModule {
 
     @Override
     protected String getJpaUnitName() {
-        return "sample-unit";
+        return "sample";
     }
 
     @Override

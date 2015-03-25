@@ -26,9 +26,8 @@ public abstract class AbstractRestletApplication extends ResourceInjectingApplic
         final Router router = newRouter();
         createInboundRoot(router);
 
-        for (Object each : getEnums()) {
-            Class<? extends Enum> eachClass = (Class<? extends Enum>) each;
-            router.attach("/" + eachClass.getSimpleName().toLowerCase(), EnumResource.build(eachClass));
+        for (Class<? extends Enum> each : getEnums()) {
+            router.attach("/" + each.getSimpleName().toLowerCase(), EnumResource.build(each));
         }
 
         return router;
@@ -36,7 +35,7 @@ public abstract class AbstractRestletApplication extends ResourceInjectingApplic
 
     protected abstract void createInboundRoot(final Router router);
 
-    protected List getEnums() {
+    protected List<Class<? extends Enum>> getEnums() {
         return Collections.EMPTY_LIST;
     }
 }

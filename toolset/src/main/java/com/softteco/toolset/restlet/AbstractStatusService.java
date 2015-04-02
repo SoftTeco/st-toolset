@@ -20,7 +20,7 @@ import org.restlet.service.StatusService;
 public class AbstractStatusService extends StatusService {
 
     @Override
-    public final Status getStatus(final Throwable throwable, final Request request, final Response response) {
+    public Status getStatus(final Throwable throwable, final Request request, final Response response) {
         return new Status(getStatus(super.getStatus(throwable, request, response), throwable), throwable);
     }
 
@@ -66,7 +66,7 @@ public class AbstractStatusService extends StatusService {
     }
 
     @Override
-    public final Representation getRepresentation(final Status status, final Request request, final Response response) {
+    public Representation getRepresentation(final Status status, final Request request, final Response response) {
         try {
             final JSONObject jsono = new JSONObject();
             jsono.put("message", getMessage(status.getThrowable()));

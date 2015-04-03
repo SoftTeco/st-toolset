@@ -16,7 +16,10 @@ public abstract class AbstractRestletApplication extends ResourceInjectingApplic
 
     @Override
     public final synchronized void start() throws Exception {
-        setStatusService(createStatusService());
+        final AbstractStatusService statusService = createStatusService();
+        if (statusService != null) {
+            setStatusService(statusService);
+        }
 
         super.start();
     }

@@ -1,5 +1,6 @@
 package com.softteco.toolset.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 
 /**
@@ -21,14 +22,17 @@ public class PageInfoDto implements Serializable {
         this.pageSize = size;
     }
 
+    @JsonIgnore
     public final int getFirst() {
         return pageNumber * pageSize;
     }
 
+    @JsonIgnore
     public final boolean isPaggable() {
         return pageSize > 0;
     }
 
+    @JsonIgnore
     public final int getLast() {
         return (pageNumber + 1) * pageSize;
     }

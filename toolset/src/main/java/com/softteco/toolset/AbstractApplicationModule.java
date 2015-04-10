@@ -100,13 +100,17 @@ public abstract class AbstractApplicationModule extends ServletModule {
 
     protected abstract Class<? extends AbstractRestletApplication> getRestletApplication();
 
+    protected String getApiPrefix() {
+        return "/api";
+    }
+
     private void configureRestlets() {
         bind(Application.class).to(getRestletApplication());
 
         final Map<String, String> params = new HashMap<>();
         params.put("org.restlet.application", getRestletApplication().getName());
         bind(RestletApplicationServlet.class).in(Scopes.SINGLETON);
-        serve("/api/*").with(RestletApplicationServlet.class, params);
+        serve(getApiPrefix() + "/*").with(RestletApplicationServlet.class, params);
     }
 
     protected String getPropertiesPath() {

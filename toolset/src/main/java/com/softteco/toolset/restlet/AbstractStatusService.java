@@ -64,6 +64,10 @@ public class AbstractStatusService extends StatusService {
 
         return throwable.getMessage();
     }
+    
+    protected boolean showStackTrace() {
+        return true;
+    }
 
     @Override
     public Representation getRepresentation(final Status status, final Request request, final Response response) {
@@ -72,7 +76,7 @@ public class AbstractStatusService extends StatusService {
             jsono.put("message", getMessage(status.getThrowable()));
             jsono.put("status", status.getCode());
             jsono.put("status-description", status.getDescription());
-            if (status.getThrowable() != null) {
+            if (showStackTrace() && status.getThrowable() != null) {
                 status.getThrowable().printStackTrace(System.out);
                 jsono.put("stackTrace", getStackTrace(status.getThrowable()));
             }

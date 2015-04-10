@@ -17,7 +17,7 @@ public abstract class AbstractRestDao {
 
     protected abstract String getHost();
 
-    protected final int getPort() {
+    protected int getPort() {
         if (getProtocol().equals("http")) {
             return HTTP_PORT;
         }

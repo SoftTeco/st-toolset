@@ -28,4 +28,16 @@ public class PageDto<Dto extends Serializable> extends PageInfoDto implements Se
             this.lines.remove(this.lines.size() - 1);
         }
     }
+
+    public PageInfoDto nextPage() {
+        if (!hasNext) {
+            return null;
+        }
+
+        final PageInfoDto pageInfoDto = new PageInfoDto();
+        pageInfoDto.pageSize = this.pageSize;
+        pageInfoDto.pageNumber = this.pageNumber + 1;
+        pageInfoDto.sort = this.sort;
+        return pageInfoDto;
+    }
 }

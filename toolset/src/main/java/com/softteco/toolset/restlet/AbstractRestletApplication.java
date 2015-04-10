@@ -33,10 +33,14 @@ public abstract class AbstractRestletApplication extends ResourceInjectingApplic
             router.attach("/" + each.getSimpleName().toLowerCase(), EnumResource.build(each));
         }
 
-        return router;
+        return attachFilter(router);
     }
 
     protected abstract void createInboundRoot(final Router router);
+
+    protected Router attachFilter(final Router router) {
+        return router;
+    }
 
     protected List<Class<? extends Enum>> getEnums() {
         return Collections.EMPTY_LIST;

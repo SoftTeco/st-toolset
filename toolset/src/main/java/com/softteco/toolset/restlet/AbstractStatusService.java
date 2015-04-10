@@ -64,7 +64,7 @@ public class AbstractStatusService extends StatusService {
 
         return throwable.getMessage();
     }
-    
+
     protected boolean showStackTrace() {
         return true;
     }

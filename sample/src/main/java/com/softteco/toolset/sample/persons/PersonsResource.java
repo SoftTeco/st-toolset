@@ -1,6 +1,8 @@
 package com.softteco.toolset.sample.persons;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.softteco.toolset.dto.PageInfoDto;
 import com.softteco.toolset.restlet.AbstractResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -13,10 +15,15 @@ public class PersonsResource extends AbstractResource {
 
     @Inject
     private PersonService personService;
+    @Inject
+    @Named("page.size")
+    private int pageSize;
 
     @Get("json")
     public PersonsListDto getAll() {
-        return personService.getAll(getPageInfo());
+        PageInfoDto dto = getPageInfo();
+        dto.pageSize = pageSize;
+        return personService.getAll(dto);
     }
 
     @Post("json")

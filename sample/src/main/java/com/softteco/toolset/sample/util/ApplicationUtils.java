@@ -6,7 +6,7 @@ import java.net.URL;
 /**
  *
  */
-public class ApplicationUtils {
+public final class ApplicationUtils {
 
     private static String appPath;
 
@@ -19,4 +19,5 @@ public class ApplicationUtils {
         return appPath;
     }
 
+    private ApplicationUtils() { }
 }

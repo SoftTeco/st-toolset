@@ -110,7 +110,6 @@ public abstract class AbstractUserSession implements UserSession {
 
     protected final void checkOnLogin() {
         if (!isLoggedIn()) {
-            System.out.println("cleanup roles");
             this.roles = null;
             cleanup();
             throw new SecurityException("User is not logged in.");

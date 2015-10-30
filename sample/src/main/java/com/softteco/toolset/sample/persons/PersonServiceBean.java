@@ -16,9 +16,7 @@ public class PersonServiceBean implements PersonService {
 
     @Override
     public PersonsListDto getAll(final PageInfoDto pageInfo) {
-        final PersonsListDto dto = new PersonsListDto();
-        dto.lines = personDtoAssembler.assemble(personDao.findAll(pageInfo));
-        return dto;
+        return new PersonsListDto(pageInfo, personDtoAssembler.assemble(personDao.findAll(pageInfo)));
     }
 
     @Override

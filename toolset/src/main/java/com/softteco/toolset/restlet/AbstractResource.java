@@ -4,12 +4,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.softteco.toolset.dto.PageInfoDto;
 import com.softteco.toolset.dto.SortInfoDto;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.restlet.ext.guice.SelfInjectingServerResource;
 import org.restlet.ext.servlet.ServletUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -30,10 +31,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         getUserSession().setLang(this.getQueryValue("lang"));
 
         final PrincipalDto principalDto = PrincipalDto.build(getHttpServletRequest());
-        System.err.println("PRINCIPAL " + principalDto);
         if (principalDto != null) {
-            System.err.println("PRINCIPAL " + principalDto.username);
-            System.err.println("PRINCIPAL " + principalDto.roles);
             getUserSession().setUsername(principalDto.username);
             getUserSession().setRoles(principalDto.roles);
         }

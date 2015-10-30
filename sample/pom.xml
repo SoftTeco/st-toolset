@@ -109,13 +109,34 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.0.M2</version>
+                <configuration>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <jettyXml>jetty.xml</jettyXml>
+                    <webApp>
+                        <extraClasspath>${basedir}/target/classes</extraClasspath>
+                        <contextPath>/sttoolset</contextPath>
+                    </webApp>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.derby</groupId>
+                        <artifactId>derby</artifactId>
+                        <version>10.11.1.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
     <dependencies>
         <dependency>
             <groupId>com.softteco.toolset</groupId>
             <artifactId>toolset</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

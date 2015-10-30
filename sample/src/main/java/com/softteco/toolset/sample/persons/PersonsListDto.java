@@ -1,7 +1,10 @@
 package com.softteco.toolset.sample.persons;
 
 import com.softteco.toolset.dto.PageDto;
+import com.softteco.toolset.dto.PageInfoDto;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -10,4 +13,12 @@ import java.io.Serializable;
 public class PersonsListDto extends PageDto<PersonDto> implements Serializable {
 
     public int count;
+
+    public PersonsListDto() {
+    }
+
+    public PersonsListDto(PageInfoDto page, List<PersonDto> newLines) {
+        super(page, newLines);
+        count = newLines.size();
+    }
 }

@@ -24,7 +24,8 @@ public final class SecurityInterceptor implements MethodInterceptor {
         handleAssertAuthorizedUser(mi);
         handleAssertUser(mi);
 
-        System.out.println("ROLES: " + Arrays.toString(userSessionProvider.get().getRoles().toArray(new String[0])));
+        System.out.println("ROLES: " + (userSessionProvider.get().getRoles() == null ? null
+                : Arrays.toString(userSessionProvider.get().getRoles().toArray(new String[0]))));
         handleAssertRoles(mi);
         return mi.proceed();
     }

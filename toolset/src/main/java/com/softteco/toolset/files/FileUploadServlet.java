@@ -68,6 +68,10 @@ public abstract class FileUploadServlet extends HttpServlet {
 
         if (getRedirect() != null) {
             resp.sendRedirect(req.getContextPath() + getRedirect() + "?uuid=" + fileName);
+        } else {
+            System.out.println("Putting to output: " + fileName);
+            resp.getOutputStream().print(fileName);
+            resp.getOutputStream().flush();
         }
     }
 

@@ -3,6 +3,7 @@ package com.softteco.toolset.bl;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 
 /**
@@ -31,6 +32,9 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
         final Class entityClass = entity.getClass();
         for (Field each : getDtoClass().getFields()) {
             if (each.getAnnotation(SkipAutoFill.class) != null) {
+                continue;
+            }
+            if (Modifier.isFinal(each.getModifiers()) || Modifier.isStatic(each.getModifiers())) {
                 continue;
             }
 

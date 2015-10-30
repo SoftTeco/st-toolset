@@ -1,5 +1,7 @@
 package com.softteco.toolset.scheduler;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import java.util.Date;
 import org.apache.logging.log4j.LogManager;
@@ -22,9 +24,11 @@ public final class SchedulerManager {
     private static final Logger LOGGER = LogManager.getLogger(SchedulerManager.class.getName());
     private Scheduler scheduler;
 
-    public SchedulerManager() {
+    @Inject
+    public SchedulerManager(final Injector injector) {
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
+            scheduler.setJobFactory(injector.getInstance(GuiceJobFactory.class));
             scheduler.clear();
             scheduler.start();
         } catch (SchedulerException e) {

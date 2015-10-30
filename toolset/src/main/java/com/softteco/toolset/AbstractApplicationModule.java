@@ -11,11 +11,15 @@ import com.softteco.toolset.mail.MailService;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.security.AssertAuthorizedUser;
+import com.softteco.toolset.security.AssertCurrentUser;
 import com.softteco.toolset.security.AssertRole;
 import com.softteco.toolset.security.AssertRoles;
 import com.softteco.toolset.security.AssertUser;
 import com.softteco.toolset.security.SecurityInterceptor;
 import com.softteco.toolset.xml.XmlProcessor;
+import org.restlet.Application;
+import org.restlet.ext.guice.SelfInjectingServerResourceModule;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,8 +27,6 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.restlet.Application;
-import org.restlet.ext.guice.SelfInjectingServerResourceModule;
 
 /**
  *
@@ -60,10 +62,12 @@ public abstract class AbstractApplicationModule extends ServletModule {
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertAuthorizedUser.class), securityInterceptor);
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertRoles.class), securityInterceptor);
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertUser.class), securityInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertCurrentUser.class), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertRoles.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertRole.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertUser.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertAuthorizedUser.class), Matchers.any(), securityInterceptor);
+        bindInterceptor(Matchers.annotatedWith(AssertCurrentUser.class), Matchers.any(), securityInterceptor);
     }
 
     private void configureMailService() {
@@ -113,7 +117,11 @@ public abstract class AbstractApplicationModule extends ServletModule {
         serve(getApiPrefix() + "/*").with(RestletApplicationServlet.class, params);
     }
 
-    protected String getPropertiesPath() {
+    /**
+     * Files with properties which would be injected as {@link com.google.inject.name.Named} value.
+     * @return absolute paths of files
+     */
+    protected String[] getPropertiesFiles() {
         return null;
     }
 
@@ -122,35 +130,35 @@ public abstract class AbstractApplicationModule extends ServletModule {
     }
 
     private void configureProperties() {
-        if (getPropertiesPath() == null) {
-            return;
+        final Properties allProperties = new Properties();
+        // default
+        Properties properties = getDefaultProperties();
+        if (properties != null && !properties.isEmpty()) {
+            allProperties.putAll(properties);
         }
-
-        Reader propertiesFileReader = null;
-        try {
-            final Properties properties = new Properties();
-            propertiesFileReader = new InputStreamReader(new FileInputStream(getPropertiesPath()), "UTF-8");
-            properties.load(propertiesFileReader);
-
-            for (String eachKey : getDefaultProperties().stringPropertyNames()) {
-                if (properties.containsKey(eachKey)) {
-                    continue;
-                }
-
-                properties.put(eachKey, getDefaultProperties().getProperty(eachKey));
-            }
-
-            Names.bindProperties(binder(), properties);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't load config file", e);
-        } finally {
-            if (propertiesFileReader != null) {
+        // read files
+        final String[] files = getPropertiesFiles();
+        if (files != null) {
+            for (String file: files) {
+                Reader propertiesFileReader = null;
                 try {
-                    propertiesFileReader.close();
+                    properties = new Properties();
+                    propertiesFileReader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+                    properties.load(propertiesFileReader);
+                    allProperties.putAll(properties);
                 } catch (IOException e) {
-                    throw new RuntimeException("Can't close reader", e);
+                    throw new RuntimeException("Can't load config file", e);
+                } finally {
+                    if (propertiesFileReader != null) {
+                        try {
+                            propertiesFileReader.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException("Can't close reader", e);
+                        }
+                    }
                 }
             }
         }
+        Names.bindProperties(binder(), allProperties);
     }
 }

@@ -16,8 +16,12 @@ public abstract class AbstractMailServiceBean implements MailService {
     private static final int SSL_MAIL_PORT = 465;
     private static final int MAIL_PORT = 2525;
 
+    protected Email createEmailInstance() {
+        return new SimpleEmail();
+    }
+
     private Email buildSimpleEmail() throws EmailException {
-        Email email = new SimpleEmail();
+        final Email email = createEmailInstance();
         return configure(email);
     }
 

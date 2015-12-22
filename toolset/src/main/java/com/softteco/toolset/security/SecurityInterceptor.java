@@ -3,11 +3,14 @@ package com.softteco.toolset.security;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.softteco.toolset.restlet.UserSession;
+import com.softteco.toolset.security.exception.ForbiddenException;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 
 /**
  *
@@ -20,12 +23,8 @@ public final class SecurityInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(final MethodInvocation mi) throws Throwable {
-        System.out.println("CURRENT USER: " + userSessionProvider.get().getUsername() + " " + userSessionProvider.get().isLoggedIn());
         handleAssertAuthorizedUser(mi);
         handleAssertUser(mi);
-
-        System.out.println("ROLES: " + (userSessionProvider.get().getRoles() == null ? null
-                : Arrays.toString(userSessionProvider.get().getRoles().toArray(new String[0]))));
         handleAssertRoles(mi);
         return mi.proceed();
     }
@@ -51,9 +50,26 @@ public final class SecurityInterceptor implements MethodInterceptor {
             }
             roles.add(methodAssertRole.role());
         }
-
-        if (!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles)) {
-            throw new SecurityException("User doesn't have rights on calling this method. Requires " + Arrays.toString(roles.toArray(new String[0])));
+        // current user
+        Object currentUser = null;
+        final AssertCurrentUser methodAssertCurrentUser = mi.getMethod().getAnnotation(AssertCurrentUser.class);
+        if (methodAssertCurrentUser != null) {
+            currentUser = mi.getArguments()[methodAssertCurrentUser.argument()];
+            if (methodAssertCurrentUser.field() != null && !methodAssertCurrentUser.field().isEmpty()) {
+                try {
+                    Field f = currentUser.getClass().getDeclaredField(methodAssertCurrentUser.field());
+                    f.setAccessible(true);
+                    currentUser = f.get(currentUser);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        // check
+        if ((!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles))
+                && !(currentUser != null && userSessionProvider.get().getUsername().equals(currentUser.toString()))) {
+            throw new ForbiddenException("User doesn't have rights on calling this method. Requires roles " + roles
+                                        + (currentUser != null ? " or user must be a current" : ""));
         }
     }
 

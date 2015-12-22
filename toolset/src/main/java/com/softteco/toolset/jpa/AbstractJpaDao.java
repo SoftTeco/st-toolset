@@ -8,6 +8,7 @@ import com.softteco.toolset.dto.SortInfoDto;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,12 +63,11 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     protected final Entity getSingleResult(final Query query) {
-        final List<Entity> list = getResultList(query);
-        LOGGER.error("Found " + list.size() + " records");
-        if (list.isEmpty()) {
+        try {
+            return (Entity) query.getSingleResult();
+        } catch (NoResultException e) {
             return null;
         }
-        return list.get(0);
     }
 
     protected final EntityManager getEntityManager() {

@@ -1,7 +1,8 @@
 package com.softteco.toolset.restlet;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import com.softteco.toolset.security.exception.ForbiddenException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Request;
@@ -13,11 +14,16 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 import org.restlet.service.StatusService;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  *
  * @author serge
  */
 public class AbstractStatusService extends StatusService {
+
+    private static final Logger LOGGER = LogManager.getLogger(StatusService.class);
 
     @Override
     public Status getStatus(final Throwable throwable, final Request request, final Response response) {
@@ -28,7 +34,9 @@ public class AbstractStatusService extends StatusService {
         if (throwable instanceof SecurityException) {
             return Status.CLIENT_ERROR_UNAUTHORIZED;
         }
-
+        if (throwable instanceof ForbiddenException) {
+            return Status.CLIENT_ERROR_FORBIDDEN;
+        }
         if (throwable instanceof AuthorizationException) {
             final AuthorizationException authorizationException = (AuthorizationException) throwable;
             if (authorizationException.getAuthorizationStatus() == AuthorizationStatus.NOT_LOGGED_IN) {
@@ -77,7 +85,7 @@ public class AbstractStatusService extends StatusService {
             jsono.put("status", status.getCode());
             jsono.put("status-description", status.getDescription());
             if (showStackTrace() && status.getThrowable() != null) {
-                status.getThrowable().printStackTrace(System.out);
+                LOGGER.debug(status.getThrowable());
                 jsono.put("stackTrace", getStackTrace(status.getThrowable()));
             }
             if (status.getThrowable() instanceof ResourceException) {
@@ -88,7 +96,7 @@ public class AbstractStatusService extends StatusService {
 
             return new StringRepresentation(jsono.toString(), MediaType.APPLICATION_JSON);
         } catch (JSONException e) {
-            e.printStackTrace(System.out);
+            LOGGER.error(e);
             return new StringRepresentation(e.getMessage(), MediaType.APPLICATION_JSON);
         }
     }

@@ -11,6 +11,7 @@ import com.softteco.toolset.mail.MailService;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.security.AssertAuthorizedUser;
+import com.softteco.toolset.security.AssertCurrentUser;
 import com.softteco.toolset.security.AssertRole;
 import com.softteco.toolset.security.AssertRoles;
 import com.softteco.toolset.security.AssertUser;
@@ -61,10 +62,12 @@ public abstract class AbstractApplicationModule extends ServletModule {
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertAuthorizedUser.class), securityInterceptor);
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertRoles.class), securityInterceptor);
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertUser.class), securityInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(AssertCurrentUser.class), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertRoles.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertRole.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertUser.class), Matchers.any(), securityInterceptor);
         bindInterceptor(Matchers.annotatedWith(AssertAuthorizedUser.class), Matchers.any(), securityInterceptor);
+        bindInterceptor(Matchers.annotatedWith(AssertCurrentUser.class), Matchers.any(), securityInterceptor);
     }
 
     private void configureMailService() {

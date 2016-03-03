@@ -30,10 +30,7 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
         getUserSession().setLang(this.getQueryValue("lang"));
 
         final PrincipalDto principalDto = PrincipalDto.build(getHttpServletRequest());
-        System.err.println("PRINCIPAL " + principalDto);
         if (principalDto != null) {
-            System.err.println("PRINCIPAL " + principalDto.username);
-            System.err.println("PRINCIPAL " + principalDto.roles);
             getUserSession().setUsername(principalDto.username);
             getUserSession().setRoles(principalDto.roles);
         }

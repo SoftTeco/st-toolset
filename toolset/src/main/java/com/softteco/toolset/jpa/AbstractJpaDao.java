@@ -7,6 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import com.softteco.toolset.dto.SortInfoDto;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -25,6 +26,8 @@ public abstract class AbstractJpaDao<Entity, Id> {
 
     @Inject
     private Provider<EntityManager> emProvider;
+    @Inject
+    private EntityManagerFactory factory;
 
     protected final Class<Entity> getEntityClass() {
         final ParameterizedType superclass;
@@ -147,5 +150,9 @@ public abstract class AbstractJpaDao<Entity, Id> {
             queryBuilder.append(" order by e.").append(getOrderProperty());
         }
         return queryBuilder.toString();
+    }
+
+    protected void evictCache() {
+        factory.getCache().evict(getEntityClass());
     }
 }

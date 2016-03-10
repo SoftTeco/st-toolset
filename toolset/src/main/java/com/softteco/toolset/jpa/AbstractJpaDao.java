@@ -152,7 +152,11 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return queryBuilder.toString();
     }
 
-    protected void evictCache() {
+    public void evictCache() {
         factory.getCache().evict(getEntityClass());
+    }
+
+    public void evictCache(final Id id) {
+        factory.getCache().evict(getEntityClass(), id);
     }
 }

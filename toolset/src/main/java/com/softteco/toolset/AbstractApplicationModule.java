@@ -21,9 +21,10 @@ import org.restlet.Application;
 import org.restlet.ext.guice.SelfInjectingServerResourceModule;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -118,10 +119,16 @@ public abstract class AbstractApplicationModule extends ServletModule {
     }
 
     /**
-     * Files with properties which would be injected as {@link com.google.inject.name.Named} value.
+     * Files with properties which would be injected as
+     * {@link com.google.inject.name.Named} value.
+     *
      * @return absolute paths of files
      */
     protected String[] getPropertiesFiles() {
+        return null;
+    }
+
+    protected String[] getResources() {
         return null;
     }
 
@@ -139,26 +146,43 @@ public abstract class AbstractApplicationModule extends ServletModule {
         // read files
         final String[] files = getPropertiesFiles();
         if (files != null) {
-            for (String file: files) {
-                Reader propertiesFileReader = null;
+            for (String file : files) {
                 try {
-                    properties = new Properties();
-                    propertiesFileReader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-                    properties.load(propertiesFileReader);
-                    allProperties.putAll(properties);
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't load config file", e);
-                } finally {
-                    if (propertiesFileReader != null) {
-                        try {
-                            propertiesFileReader.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException("Can't close reader", e);
-                        }
-                    }
+                    allProperties.putAll(loadProperties(new FileInputStream(file)));
+                } catch (FileNotFoundException e) {
+                    // skip it
+                    System.out.println("We didn't find file: " + file);
                 }
             }
         }
+        // read resources
+        final String[] resources = getResources();
+        if (resources != null) {
+            for (String each : resources) {
+                allProperties.putAll(loadProperties(Thread.currentThread().getContextClassLoader().getResourceAsStream(each)));
+            }
+        }
+
         Names.bindProperties(binder(), allProperties);
+    }
+
+    private Properties loadProperties(final InputStream in) {
+        InputStreamReader propertiesFileReader = null;
+        try {
+            final Properties properties = new Properties();
+            propertiesFileReader = new InputStreamReader(in, "UTF-8");
+            properties.load(propertiesFileReader);
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException("Can't load config file", e);
+        } finally {
+            if (propertiesFileReader != null) {
+                try {
+                    propertiesFileReader.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't close reader", e);
+                }
+            }
+        }
     }
 }

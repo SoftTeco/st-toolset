@@ -29,13 +29,16 @@ public abstract class AbstractConditionalResource<S extends UserSession> extends
 
     @Override
     protected Representation get() throws ResourceException {
+        if (getData() == null) {
+            return super.get();
+        }
+
         try {
             final RepresentationInfo info = getInfo();
             final Representation representation = toRepresentation(getData(), info);
             if (representation.getTag() == null) {
                 representation.setTag(info.getTag());
             }
-            System.out.println("" + representation.getModificationDate() + " vs " + info.getModificationDate());
             if (representation.getModificationDate() == null) {
                 representation.setModificationDate(info.getModificationDate());
             }
@@ -84,7 +87,6 @@ public abstract class AbstractConditionalResource<S extends UserSession> extends
         if (getTag() != null) {
             representationInfo.setTag(getTag());
         }
-        System.out.println("getModificationDate: " + getModificationDate());
         if (getModificationDate() != null) {
             representationInfo.setModificationDate(getModificationDate());
         }

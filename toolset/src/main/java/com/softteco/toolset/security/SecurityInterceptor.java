@@ -26,7 +26,21 @@ public final class SecurityInterceptor implements MethodInterceptor {
         handleAssertAuthorizedUser(mi);
         handleAssertUser(mi);
         handleAssertRoles(mi);
+        handleAssertOneOfRoles(mi);
         return mi.proceed();
+    }
+
+    private void handleAssertOneOfRoles(final MethodInvocation mi) throws SecurityException {
+        final List<String> roles = new ArrayList<>();
+        if (mi.getMethod().getDeclaringClass().getAnnotation(AssertOneOfRoles.class) != null) {
+            roles.addAll(Arrays.asList(mi.getMethod().getDeclaringClass().getAnnotation(AssertOneOfRoles.class).roles()));
+        }
+        final AssertOneOfRoles methodAssertRoles = mi.getMethod().getAnnotation(AssertOneOfRoles.class);
+        roles.addAll(Arrays.asList(methodAssertRoles.roles()));
+
+        if (!roles.isEmpty() && !userSessionProvider.get().hasOneOfRoles(roles)) {
+            throw new ForbiddenException("User doesn't have rights on calling this method. Requires one of roles " + roles);
+        }
     }
 
     private void handleAssertRoles(final MethodInvocation mi) throws SecurityException {
@@ -69,7 +83,7 @@ public final class SecurityInterceptor implements MethodInterceptor {
         if ((!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles))
                 && !(currentUser != null && userSessionProvider.get().getUsername().equals(currentUser.toString()))) {
             throw new ForbiddenException("User doesn't have rights on calling this method. Requires roles " + roles
-                                        + (currentUser != null ? " or user must be a current" : ""));
+                    + (currentUser != null ? " or user must be a current" : ""));
         }
     }
 

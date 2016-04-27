@@ -101,6 +101,17 @@ public abstract class AbstractUserSession implements UserSession {
         return false;
     }
 
+    @Override
+    public boolean hasOneOfRoles(final List<String> allowedRoles) {
+        for (String each : getRoles()) {
+            if (allowedRoles.contains(each)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected abstract void cleanup();
 
     @Override

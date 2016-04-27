@@ -28,4 +28,6 @@ public interface UserSession {
     boolean hasRoles(List<String> roles);
 
     boolean isLoggedIn();
+
+    boolean hasOneOfRoles(List<String> roles);
 }

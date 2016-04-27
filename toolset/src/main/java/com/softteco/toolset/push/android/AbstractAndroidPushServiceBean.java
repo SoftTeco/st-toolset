@@ -1,6 +1,7 @@
 package com.softteco.toolset.push.android;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softteco.toolset.push.Payload;
 import com.softteco.toolset.push.PushService;
 import com.softteco.toolset.rs.AbstractRestDao;
 import java.io.IOException;
@@ -57,11 +58,11 @@ public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao imp
     }
 
     @Override
-    public final boolean sendMessage(final String to, final Object data) {
+    public final boolean sendMessage(final String to, final Payload data) {
         final RequestDto requestDto = new RequestDto();
         requestDto.registrationIds = new ArrayList<>();
         requestDto.registrationIds.add(to);
-        requestDto.data = data;
+        requestDto.data = data.buildAndroidObject();
 
         return execute(requestDto).success > 0;
     }

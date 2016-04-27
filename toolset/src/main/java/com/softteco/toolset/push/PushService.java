@@ -6,5 +6,5 @@ package com.softteco.toolset.push;
  */
 public interface PushService {
 
-    boolean sendMessage(String to, Object data);
+    boolean sendMessage(String to, Payload data);
 }

@@ -10,7 +10,7 @@ import com.softteco.toolset.push.PushService;
  *
  * @author sergeizenevich
  */
-public abstract class IOSPushServiceBean implements PushService {
+public class IOSPushServiceBean implements PushService {
 
     @Inject
     private Provider<ApnsService> apnsServiceProvider;

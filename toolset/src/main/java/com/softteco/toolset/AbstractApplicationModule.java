@@ -166,6 +166,7 @@ public abstract class AbstractApplicationModule extends ServletModule {
             }
         }
 
+        System.out.println("PROPERTIES: " + allProperties.size());
         Names.bindProperties(binder(), allProperties);
     }
 

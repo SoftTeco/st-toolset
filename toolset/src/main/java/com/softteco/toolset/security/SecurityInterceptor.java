@@ -36,7 +36,9 @@ public final class SecurityInterceptor implements MethodInterceptor {
             roles.addAll(Arrays.asList(mi.getMethod().getDeclaringClass().getAnnotation(AssertOneOfRoles.class).roles()));
         }
         final AssertOneOfRoles methodAssertRoles = mi.getMethod().getAnnotation(AssertOneOfRoles.class);
-        roles.addAll(Arrays.asList(methodAssertRoles.roles()));
+        if (methodAssertRoles != null) {
+            roles.addAll(Arrays.asList(methodAssertRoles.roles()));
+        }
 
         if (!roles.isEmpty() && !userSessionProvider.get().hasOneOfRoles(roles)) {
             throw new ForbiddenException("User doesn't have rights on calling this method. Requires one of roles " + roles);

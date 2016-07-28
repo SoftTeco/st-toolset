@@ -27,7 +27,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
     @Inject
     private Provider<EntityManager> emProvider;
     @Inject
-    private EntityManagerFactory factory;
+    private Provider<EntityManagerFactory> factoryProvider;
 
     protected final Class<Entity> getEntityClass() {
         final ParameterizedType superclass;
@@ -153,10 +153,10 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     public void evictCache() {
-        factory.getCache().evict(getEntityClass());
+        factoryProvider.get().getCache().evict(getEntityClass());
     }
 
     public void evictCache(final Id id) {
-        factory.getCache().evict(getEntityClass(), id);
+        factoryProvider.get().getCache().evict(getEntityClass(), id);
     }
 }

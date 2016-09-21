@@ -14,7 +14,7 @@
         <reporting.findbugs.plugin>3.0.0</reporting.findbugs.plugin>
         <reporting.javancss.plugin>2.1</reporting.javancss.plugin>
         <reporting.cobertura.plugin>2.6</reporting.cobertura.plugin>
-        
+        <restlet-version>2.3.4</restlet-version>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties> 
     <build>
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>com.softteco.toolset</groupId>
             <artifactId>toolset</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -193,13 +193,32 @@
             <artifactId>poi</artifactId>
             <version>3.10-FINAL</version>
         </dependency>
+        <dependency>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.ext.swagger</artifactId>
+            <version>${restlet-version}</version>
+        </dependency>
     </dependencies>
+
     <repositories>
+        <repository>
+            <id>repo</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <url>file://${project.basedir}/libs</url>
+        </repository>
         <repository>  
             <id>maven-restlet</id>  
             <name>Public online Restlet repository</name>  
             <url>http://maven.restlet.org</url>  
-        </repository> 
+        </repository>
+        <repository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Releases Repository</name>
+            <url>https://repository-master.mulesoft.org/releases/</url>
+        </repository>
     </repositories>
 </project>
 

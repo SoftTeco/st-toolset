@@ -21,8 +21,14 @@ public abstract class AbstractUserSession implements UserSession {
         return dto;
     }
 
+    protected abstract String getDefaultLang();
+    protected abstract String[] getAvailableLangs();
+
     @Override
     public final String getLang() {
+        if (!Arrays.asList(getAvailableLangs()).contains(lang)) {
+            this.lang = getDefaultLang();
+        }
         return lang;
     }
 

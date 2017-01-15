@@ -20,7 +20,8 @@ class MailAsyncServiceBean implements MailAsyncService {
 
     @Override
     public void send(final String email, final String subject, final String body) {
-        final JobDetail jobDetail = JobBuilder.newJob(MailSendingJob.class).withIdentity("mail_" + System.currentTimeMillis() + "_" + UUID.randomUUID()).build();
+        final JobDetail jobDetail = JobBuilder.newJob(MailSendingJob.class)
+                .withIdentity("mail_" + System.currentTimeMillis() + "_" + UUID.randomUUID()).build();
         jobDetail.getJobDataMap().put(MailSendingJob.EMAIL, email);
         jobDetail.getJobDataMap().put(MailSendingJob.SUBJECT, subject);
         jobDetail.getJobDataMap().put(MailSendingJob.BODY, body);

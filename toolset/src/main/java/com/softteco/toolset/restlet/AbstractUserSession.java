@@ -13,6 +13,7 @@ public abstract class AbstractUserSession implements UserSession {
     private String lang = "ru";
     private String username;
     private Set<String> roles;
+    private Device device;
 
     public final PrincipalDto getPrincipal() {
         final PrincipalDto dto = new PrincipalDto();
@@ -26,9 +27,6 @@ public abstract class AbstractUserSession implements UserSession {
 
     @Override
     public final String getLang() {
-        if (!Arrays.asList(getAvailableLangs()).contains(lang)) {
-            this.lang = getDefaultLang();
-        }
         return lang;
     }
 
@@ -37,7 +35,12 @@ public abstract class AbstractUserSession implements UserSession {
         if (newLang == null || newLang.isEmpty()) {
             return;
         }
-        this.lang = newLang;
+
+        if (Arrays.asList(getAvailableLangs()).contains(lang)) {
+            this.lang = newLang;
+        } else {
+            this.lang = getDefaultLang();
+        }
     }
 
     @Override
@@ -52,6 +55,16 @@ public abstract class AbstractUserSession implements UserSession {
             cleanup();
         }
         this.username = newUsername;
+    }
+
+    @Override
+    public void setDevice(final Device device) {
+        this.device = device;
+    }
+
+    @Override
+    public Device getDevice() {
+        return device;
     }
 
     @Override

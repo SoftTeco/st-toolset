@@ -27,6 +27,10 @@ public abstract class AbstractUserSession implements UserSession {
 
     @Override
     public final String getLang() {
+        if (!Arrays.asList(getAvailableLangs()).contains(lang)) {
+            this.lang = getDefaultLang();
+        }
+
         return lang;
     }
 
@@ -36,11 +40,7 @@ public abstract class AbstractUserSession implements UserSession {
             return;
         }
 
-        if (Arrays.asList(getAvailableLangs()).contains(lang)) {
-            this.lang = newLang;
-        } else {
-            this.lang = getDefaultLang();
-        }
+        this.lang = newLang;
     }
 
     @Override

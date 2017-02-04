@@ -10,6 +10,7 @@
     <properties>
         <restlet-version>2.3.4</restlet-version>
 
+
         <!-- General info -->
         <project.name>REPLACE</project.name>
         <project.description>REPLACE</project.description>

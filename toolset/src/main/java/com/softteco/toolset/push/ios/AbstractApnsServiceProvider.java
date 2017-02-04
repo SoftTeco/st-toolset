@@ -1,5 +1,7 @@
 package com.softteco.toolset.push.ios;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Provider;
 import com.notnoop.apns.ApnsService;
 import com.notnoop.apns.ApnsServiceBuilder;
@@ -9,6 +11,8 @@ import com.notnoop.apns.ApnsServiceBuilder;
  * @author sergeizenevich
  */
 public abstract class AbstractApnsServiceProvider implements Provider<ApnsService> {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     protected abstract boolean isProduction();
 
@@ -35,4 +39,12 @@ public abstract class AbstractApnsServiceProvider implements Provider<ApnsServic
         return apnsService;
     }
 
+    protected String buildMessage(final Object data) {
+        try {
+            return this.objectMapper.writeValueAsString(new RequestDto(data));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace(System.out);
+            return null;
+        }
+    }
 }

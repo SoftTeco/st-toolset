@@ -1,7 +1,5 @@
 package com.softteco.toolset.i18n;
 
-import com.google.inject.Inject;
-import com.softteco.toolset.restlet.UserSession;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
 import java.io.File;
@@ -27,9 +25,6 @@ import java.util.Properties;
  * - pattern ( Hello {{name}} )
  */
 public abstract class AbstractI18nService {
-
-    @Inject
-    private UserSession session;
 
     private Map<String, Map<String, Properties>> bundles;
 
@@ -58,14 +53,6 @@ public abstract class AbstractI18nService {
                 }
             }
         }
-    }
-
-    public String getMessage(final String bundle, final String key) {
-        return getMessage(session.getLang(), bundle, key);
-    }
-
-    public String getMessage(final String bundle, final String key, final Map<String, String> params) {
-        return getMessage(session.getLang(), bundle, key, params);
     }
 
     public String getMessage(final String lang, final String bundle, final String key) {

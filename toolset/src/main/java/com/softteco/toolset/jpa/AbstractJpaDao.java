@@ -50,6 +50,9 @@ public abstract class AbstractJpaDao<Entity, Id> {
     }
 
     protected final List<Entity> getResultList(final Query query, final PageInfoDto page) {
+        if (page == null) {
+            return getResultList(query);
+        }
         if (page.isPaggable()) {
             query.setMaxResults(page.pageSize + 1);
             query.setFirstResult(page.getFirst());

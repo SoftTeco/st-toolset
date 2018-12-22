@@ -30,4 +30,6 @@ public interface UserSession {
     boolean isLoggedIn();
 
     boolean hasOneOfRoles(List<String> roles);
+
+    boolean isUser(String account);
 }

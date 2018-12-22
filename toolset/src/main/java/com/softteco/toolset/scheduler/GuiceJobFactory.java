@@ -2,6 +2,7 @@ package com.softteco.toolset.scheduler;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
@@ -15,6 +16,7 @@ import org.quartz.spi.TriggerFiredBundle;
  *
  * @author sergeizenevich
  */
+@Singleton
 public class GuiceJobFactory implements JobFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(GuiceJobFactory.class.getName());
@@ -33,7 +35,8 @@ public class GuiceJobFactory implements JobFactory {
 
         try {
             // Get a new instance of that class from Guice so we can do dependency injection
-            return (Job) injector.getInstance(jobClass);
+            final Job job = (Job) injector.getInstance(jobClass);
+            return job;
         } catch (Exception e) {
             // Something went wrong.  Print out the stack trace here so SLF4J doesn't hide it.
             LOGGER.error("Problem with building job.", e);

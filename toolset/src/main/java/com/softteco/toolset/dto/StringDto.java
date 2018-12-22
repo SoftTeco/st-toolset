@@ -11,4 +11,12 @@ import java.io.Serializable;
 public class StringDto implements Serializable {
 
     public String string;
+
+    public StringDto() {
+    }
+
+    public StringDto(final String string) {
+        this.string = string;
+    }
+
 }

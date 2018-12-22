@@ -2,7 +2,7 @@ package com.softteco.toolset.mail;
 
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +17,7 @@ public abstract class AbstractMailServiceBean implements MailService {
     private static final int MAIL_PORT = 2525;
 
     protected Email createEmailInstance() {
-        return new SimpleEmail();
+        return new HtmlEmail();
     }
 
     private Email buildSimpleEmail() throws EmailException {
@@ -56,7 +56,7 @@ public abstract class AbstractMailServiceBean implements MailService {
     }
 
     protected String getTestEmailText() {
-        return "This is a test mail ... :-)";
+        return "<b>This is a test mail ... :-)</b>";
     }
 
     @Override
@@ -76,4 +76,23 @@ public abstract class AbstractMailServiceBean implements MailService {
             LOGGER.error("Problem with sending email.", e);
         }
     }
+
+    @Override
+    public void send(final String mail, final String[] ccs, final String subject, final String body) {
+        try {
+            final Email email = buildSimpleEmail();
+            email.setSubject(subject);
+            email.setMsg(body);
+            email.addTo(mail);
+            if (ccs != null) {
+                for (String each : ccs) {
+                    email.addCc(each);
+                }
+            }
+            email.send();
+        } catch (EmailException e) {
+            LOGGER.error("Problem with sending email.", e);
+        }
+    }
+
 }

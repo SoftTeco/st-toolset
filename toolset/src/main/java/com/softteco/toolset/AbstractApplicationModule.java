@@ -102,6 +102,9 @@ public abstract class AbstractApplicationModule extends ServletModule {
     protected abstract String getJpaUnitName();
 
     private void configurePersistModule() {
+        if (getJpaUnitName() == null) {
+            return;
+        }
         install(new JpaPersistModule(getJpaUnitName()));
         filter("/*").through(PersistFilter.class);
     }
@@ -113,6 +116,10 @@ public abstract class AbstractApplicationModule extends ServletModule {
     }
 
     private void configureRestlets() {
+        if (getRestletApplication() == null) {
+            return;
+        }
+
         bind(Application.class).to(getRestletApplication());
 
         final Map<String, String> params = new HashMap<>();
@@ -122,8 +129,7 @@ public abstract class AbstractApplicationModule extends ServletModule {
     }
 
     /**
-     * Files with properties which would be injected as
-     * {@link com.google.inject.name.Named} value.
+     * Files with properties which would be injected as {@link com.google.inject.name.Named} value.
      *
      * @return absolute paths of files
      */

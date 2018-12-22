@@ -61,15 +61,23 @@ public class AbstractStatusService extends StatusService {
         return null;
     }
 
-    private String getMessage(final Throwable throwable) {
+    protected boolean drildownThrowable(final Throwable throwable) {
+        return throwable instanceof ResourceException;
+    }
+
+    protected String getMessage(final Throwable throwable) {
         if (throwable == null) {
             return "Server errors";
         }
 
-        if (throwable instanceof ResourceException) {
+        if (drildownThrowable(throwable)) {
             return getMessage(throwable.getCause());
         }
 
+        return buildMessage(throwable);
+    }
+
+    protected String buildMessage(final Throwable throwable) {
         return throwable.getMessage();
     }
 
@@ -77,17 +85,35 @@ public class AbstractStatusService extends StatusService {
         return true;
     }
 
+    protected String getExceptionName(final Throwable throwable) {
+        if (throwable == null) {
+            return null;
+        }
+
+        if (throwable instanceof ResourceException) {
+            return getExceptionName(throwable.getCause());
+        }
+
+        return throwable.getClass().getName();
+    }
+
+    protected JSONObject buildJsonObject(final Status status) throws JSONException {
+        final JSONObject jsono = new JSONObject();
+        jsono.put("message", getMessage(status.getThrowable()));
+        jsono.put("exception", getExceptionName(status.getThrowable()));
+        jsono.put("status", status.getCode());
+        jsono.put("status-description", status.getDescription());
+        if (showStackTrace() && status.getThrowable() != null) {
+            LOGGER.debug(status.getThrowable());
+            jsono.put("stackTrace", getStackTrace(status.getThrowable()));
+        }
+        return jsono;
+    }
+
     @Override
     public Representation getRepresentation(final Status status, final Request request, final Response response) {
         try {
-            final JSONObject jsono = new JSONObject();
-            jsono.put("message", getMessage(status.getThrowable()));
-            jsono.put("status", status.getCode());
-            jsono.put("status-description", status.getDescription());
-            if (showStackTrace() && status.getThrowable() != null) {
-                LOGGER.debug(status.getThrowable());
-                jsono.put("stackTrace", getStackTrace(status.getThrowable()));
-            }
+            final JSONObject jsono = buildJsonObject(status);
             if (status.getThrowable() instanceof ResourceException) {
                 append(status.getThrowable().getCause(), jsono);
             } else {

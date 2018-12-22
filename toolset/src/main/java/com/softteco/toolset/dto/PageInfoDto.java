@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @author serge
  */
 public class PageInfoDto implements Serializable {
+
     public static final int DEFAULT_PAGE_SIZE = 20;
     public static final int DEFAULT_PAGE = 0;
 
@@ -36,4 +37,10 @@ public class PageInfoDto implements Serializable {
     public final int getLast() {
         return (pageNumber + 1) * pageSize;
     }
+
+    @Override
+    public String toString() {
+        return "PageInfoDto{" + "pageNumber=" + pageNumber + ", pageSize=" + pageSize + '}';
+    }
+
 }

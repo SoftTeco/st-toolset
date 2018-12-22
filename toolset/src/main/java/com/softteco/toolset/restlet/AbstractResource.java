@@ -31,6 +31,9 @@ public abstract class AbstractResource<S extends UserSession> extends SelfInject
 
         final PrincipalDto principalDto = PrincipalDto.build(getHttpServletRequest());
         if (principalDto != null) {
+//            NewRelic.setUserName(principalDto.username);
+//            NewRelic.addCustomParameter("userId", principalDto.username);
+
             getUserSession().setUsername(principalDto.username);
             getUserSession().setRoles(principalDto.roles);
         }

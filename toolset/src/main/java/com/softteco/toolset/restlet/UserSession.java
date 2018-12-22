@@ -17,6 +17,10 @@ public interface UserSession {
 
     void setLang(String lang);
 
+    void setDevice(Device device);
+
+    Device getDevice();
+
     Set<String> getRoles();
 
     void setRoles(Set<String> roles);

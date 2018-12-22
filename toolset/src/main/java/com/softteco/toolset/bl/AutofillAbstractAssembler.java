@@ -71,6 +71,10 @@ public abstract class AutofillAbstractAssembler<E, D> extends AbstractAssembler<
     public void disassemble(final E entity, final D dto) {
         final Class entityClass = entity.getClass();
         for (Field each : getDtoClass().getFields()) {
+            if (each.getAnnotation(SkipAutoFill.class) != null) {
+                continue;
+            }
+
             try {
                 final Method method = entityClass.getMethod("set" + each.getName().substring(0, 1).toUpperCase() + each.getName().substring(1),
                         each.getType());

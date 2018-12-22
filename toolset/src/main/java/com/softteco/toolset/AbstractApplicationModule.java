@@ -8,6 +8,7 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 import com.google.inject.servlet.SessionScoped;
 import com.softteco.toolset.mail.MailService;
+import com.softteco.toolset.push.PushServiceProvider;
 import com.softteco.toolset.restlet.AbstractRestletApplication;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.security.AssertAuthorizedUser;
@@ -31,7 +32,6 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- *
  * @author serge
  */
 public abstract class AbstractApplicationModule extends ServletModule {
@@ -49,11 +49,20 @@ public abstract class AbstractApplicationModule extends ServletModule {
         configureXmlProcessor();
         configureMailService();
         configureSecurity();
+        configurePushProviders();
 
         configureApplication();
     }
 
     protected Class<? extends MailService> getMailServiceClass() {
+        return null;
+    }
+
+    protected Class<? extends PushServiceProvider> getAndroidPushProvider() {
+        return null;
+    }
+
+    protected Class<? extends PushServiceProvider> getIosPushProvider() {
         return null;
     }
 
@@ -77,6 +86,16 @@ public abstract class AbstractApplicationModule extends ServletModule {
     private void configureMailService() {
         if (getMailServiceClass() != null) {
             bind(MailService.class).to(getMailServiceClass());
+        }
+    }
+
+    private void configurePushProviders() {
+        if (getAndroidPushProvider() != null) {
+            bind(PushServiceProvider.class).annotatedWith(Names.named("androidPushServiceBean")).to(getAndroidPushProvider());
+        }
+
+        if (getIosPushProvider() != null) {
+            bind(PushServiceProvider.class).annotatedWith(Names.named("iosPushServiceBean")).to(getIosPushProvider());
         }
     }
 

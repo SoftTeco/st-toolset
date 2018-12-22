@@ -1,20 +1,21 @@
 package com.softteco.toolset.push.android;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softteco.toolset.push.Payload;
-import com.softteco.toolset.push.PushService;
+import com.softteco.toolset.push.PushServiceProvider;
 import com.softteco.toolset.rs.AbstractRestDao;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
+
 /**
- *
  * @author sergeizenevich
  */
-public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao implements PushService {
+public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao implements PushServiceProvider {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -43,6 +44,7 @@ public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao imp
             getClient().executeMethod(postMethod);
 
             response = postMethod.getResponseBodyAsString();
+            System.out.println(MessageFormat.format("REQUEST: {0}, //\n RESPONSE: {1}", objectMapper.writeValueAsString(requestDto), response));
             return objectMapper.readValue(response, ResponseDto.class);
         } catch (UnsupportedEncodingException e) {
             System.out.println("RESPONSE: " + response);
@@ -58,11 +60,15 @@ public abstract class AbstractAndroidPushServiceBean extends AbstractRestDao imp
     }
 
     @Override
-    public final boolean sendMessage(final String to, final Payload data) {
+    public final boolean sendMessage(final String to, final Object data) {
+        return sendMessage(Collections.singletonList(to), data);
+    }
+
+    @Override
+    public final boolean sendMessage(final List<String> to, final Object data) {
         final RequestDto requestDto = new RequestDto();
-        requestDto.registrationIds = new ArrayList<>();
-        requestDto.registrationIds.add(to);
-        requestDto.data = data.buildAndroidObject();
+        requestDto.registrationIds = to;
+        requestDto.data = data;
 
         return execute(requestDto).success > 0;
     }

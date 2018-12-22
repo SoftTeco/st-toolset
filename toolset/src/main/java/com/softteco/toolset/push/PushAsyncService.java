@@ -5,13 +5,13 @@ import com.google.inject.ImplementedBy;
 import java.util.List;
 
 /**
- * Created on 7.10.16.
+ * Created on 3.2.17.
  *
  * @author Denis Kuhta
  * @since JDK1.8
  */
-@ImplementedBy(PushServiceBean.class)
-public interface PushService {
+@ImplementedBy(PushAsyncServiceBean.class)
+public interface PushAsyncService {
 
     void sendMessage(DeviceDto device, Object payload);
 

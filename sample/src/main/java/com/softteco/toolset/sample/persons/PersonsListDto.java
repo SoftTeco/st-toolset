@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- *
  * @author serge
  */
 public class PersonsListDto extends PageDto<PersonDto> implements Serializable {
@@ -20,5 +19,13 @@ public class PersonsListDto extends PageDto<PersonDto> implements Serializable {
     public PersonsListDto(PageInfoDto page, List<PersonDto> newLines) {
         super(page, newLines);
         count = newLines.size();
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
     }
 }

@@ -5,6 +5,10 @@ import com.google.inject.name.Named;
 import com.softteco.toolset.dto.PageInfoDto;
 import com.softteco.toolset.restlet.AbstractResource;
 import com.softteco.toolset.sample.I18nServiceBean;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
@@ -14,6 +18,7 @@ import java.util.HashMap;
  *
  * @author serge
  */
+@Api(value = "Persons", description = "Person list resource")
 public class PersonsResource extends AbstractResource {
 
     @Inject
@@ -24,6 +29,8 @@ public class PersonsResource extends AbstractResource {
     @Inject
     private I18nServiceBean i18nServiceBean;
 
+    @ApiOperation(value = "list the persons", tags = "person", response = PersonsListDto.class)
+    @ApiResponses({ @ApiResponse(code = 200, message = "the list of persons"), })
     @Get("json")
     public PersonsListDto getAll() {
         PageInfoDto dto = getPageInfo();
@@ -31,6 +38,7 @@ public class PersonsResource extends AbstractResource {
         return personService.getAll(dto);
     }
 
+    @ApiOperation(value = "add a person", tags = "person")
     @Post("json")
     public PersonDto create(final PersonDto dto) {
         // "send email"

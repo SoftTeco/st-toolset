@@ -1,8 +1,6 @@
 package com.softteco.toolset.restlet;
 
 import com.softteco.toolset.security.exception.ForbiddenException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Request;
@@ -22,8 +20,6 @@ import java.io.StringWriter;
  * @author serge
  */
 public class AbstractStatusService extends StatusService {
-
-    private static final Logger LOGGER = LogManager.getLogger(StatusService.class);
 
     @Override
     public Status getStatus(final Throwable throwable, final Request request, final Response response) {
@@ -104,7 +100,7 @@ public class AbstractStatusService extends StatusService {
         jsono.put("status", status.getCode());
         jsono.put("status-description", status.getDescription());
         if (showStackTrace() && status.getThrowable() != null) {
-            LOGGER.debug(status.getThrowable());
+            status.getThrowable().printStackTrace(System.out);
             jsono.put("stackTrace", getStackTrace(status.getThrowable()));
         }
         return jsono;
@@ -122,7 +118,7 @@ public class AbstractStatusService extends StatusService {
 
             return new StringRepresentation(jsono.toString(), MediaType.APPLICATION_JSON);
         } catch (JSONException e) {
-            LOGGER.error(e);
+            e.printStackTrace(System.out);
             return new StringRepresentation(e.getMessage(), MediaType.APPLICATION_JSON);
         }
     }

@@ -11,8 +11,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -21,8 +19,6 @@ import org.apache.logging.log4j.Logger;
  * @param <Id>
  */
 public abstract class AbstractJpaDao<Entity, Id> {
-
-    private static final Logger LOGGER = LogManager.getLogger(AbstractJpaDao.class);
 
     @Inject
     private Provider<EntityManager> emProvider;
@@ -130,7 +126,7 @@ public abstract class AbstractJpaDao<Entity, Id> {
         try {
             getEntityManager().refresh(entity);
         } catch (RuntimeException e) {
-            LOGGER.error("Problem with refreshing... " + entity, e);
+            e.printStackTrace(System.out);
         }
         getEntityManager().remove(entity);
     }

@@ -1,10 +1,9 @@
 package com.softteco.toolset.mail;
 
 import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailConstants;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -12,7 +11,6 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class AbstractMailServiceBean implements MailService {
 
-    private static final Logger LOGGER = LogManager.getLogger(AbstractMailServiceBean.class);
     private static final int SSL_MAIL_PORT = 465;
     private static final int MAIL_PORT = 2525;
 
@@ -20,7 +18,7 @@ public abstract class AbstractMailServiceBean implements MailService {
         return new HtmlEmail();
     }
 
-    private Email buildSimpleEmail() throws EmailException {
+    protected Email buildSimpleEmail() throws EmailException {
         final Email email = createEmailInstance();
         return configure(email);
     }
@@ -56,7 +54,7 @@ public abstract class AbstractMailServiceBean implements MailService {
     }
 
     protected String getTestEmailText() {
-        return "<b>This is a test mail ... :-)</b>";
+        return "<b>Это тестовое сообщение ... :-)</b>";
     }
 
     @Override
@@ -68,19 +66,25 @@ public abstract class AbstractMailServiceBean implements MailService {
     public void send(final String mail, final String subject, final String body) {
         try {
             final Email email = buildSimpleEmail();
+            email.setCharset(EmailConstants.UTF_8);
             email.setSubject(subject);
             email.setMsg(body);
             email.addTo(mail);
             email.send();
         } catch (EmailException e) {
-            LOGGER.error("Problem with sending email.", e);
+            e.printStackTrace(System.out);
         }
     }
 
     @Override
     public void send(final String mail, final String[] ccs, final String subject, final String body) {
+        if (mail == null) {
+            return;
+        }
+
         try {
             final Email email = buildSimpleEmail();
+            email.setCharset(EmailConstants.UTF_8);
             email.setSubject(subject);
             email.setMsg(body);
             email.addTo(mail);
@@ -91,7 +95,7 @@ public abstract class AbstractMailServiceBean implements MailService {
             }
             email.send();
         } catch (EmailException e) {
-            LOGGER.error("Problem with sending email.", e);
+            e.printStackTrace(System.out);
         }
     }
 

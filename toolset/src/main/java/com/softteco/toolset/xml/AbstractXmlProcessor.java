@@ -51,8 +51,13 @@ public abstract class AbstractXmlProcessor implements XmlProcessor {
         };
         xStream.registerConverter(new NullDoubleConverter());
         xStream.registerConverter(new NullLongConverter());
+        registerConverters(xStream);
         xStream.processAnnotations(supportedClasses.toArray(new Class[supportedClasses.size()]));
         return xStream;
+    }
+
+    protected void registerConverters(final XStream xStream) {
+
     }
 
     @Override

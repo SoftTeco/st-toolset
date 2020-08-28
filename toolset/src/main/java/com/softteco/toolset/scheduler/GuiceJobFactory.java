@@ -3,8 +3,6 @@ package com.softteco.toolset.scheduler;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -19,7 +17,6 @@ import org.quartz.spi.TriggerFiredBundle;
 @Singleton
 public class GuiceJobFactory implements JobFactory {
 
-    private static final Logger LOGGER = LogManager.getLogger(GuiceJobFactory.class.getName());
     private final Injector injector;
 
     @Inject
@@ -39,7 +36,7 @@ public class GuiceJobFactory implements JobFactory {
             return job;
         } catch (Exception e) {
             // Something went wrong.  Print out the stack trace here so SLF4J doesn't hide it.
-            LOGGER.error("Problem with building job.", e);
+            e.printStackTrace(System.out);
 
             // Rethrow the exception as an UnsupportedOperationException
             throw new UnsupportedOperationException(e);

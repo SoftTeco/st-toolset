@@ -4,8 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import java.util.Date;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -22,7 +20,6 @@ public final class SchedulerManager {
 
     private static final int TWO_SECS = 2000;
     private static final int TEN_SECS = 10;
-    private static final Logger LOGGER = LogManager.getLogger(SchedulerManager.class.getName());
     private Scheduler scheduler;
 
     @Inject
@@ -34,9 +31,9 @@ public final class SchedulerManager {
 //            scheduler.clear();
             scheduler.startDelayed(TEN_SECS);
         } catch (SchedulerException e) {
-            LOGGER.error("Problem with scheduler", e);
+            e.printStackTrace(System.out);
         } catch (Exception e) {
-            LOGGER.error("Problem with scheduler", e);
+            e.printStackTrace(System.out);
         }
     }
 
@@ -48,13 +45,13 @@ public final class SchedulerManager {
 
     public void addJob(final JobDetail jd, final Trigger trigger) {
         try {
-            LOGGER.error("addJob...");
+            System.out.println("addJob...");
             final Date date = scheduler.scheduleJob(jd, trigger);
-            LOGGER.error("addJob: " + date);
+            System.out.println("addJob: " + date);
         } catch (SchedulerException e) {
-            LOGGER.error("Problem with scheduler", e);
+            e.printStackTrace(System.out);
         } catch (Exception e) {
-            LOGGER.error("Problem with scheduler", e);
+            e.printStackTrace(System.out);
         }
     }
 }

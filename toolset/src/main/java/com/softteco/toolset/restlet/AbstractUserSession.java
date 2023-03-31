@@ -1,6 +1,7 @@
 package com.softteco.toolset.restlet;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ public abstract class AbstractUserSession implements UserSession {
 
     private String lang = "ru";
     private String username;
-    private Set<String> roles;
+    private Set<String> roles = new HashSet<>();
     private Device device;
 
     public final PrincipalDto getPrincipal() {

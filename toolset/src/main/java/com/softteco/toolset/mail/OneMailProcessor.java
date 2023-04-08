@@ -34,6 +34,6 @@ public final class OneMailProcessor implements MailProcessor {
 
     @Override
     public void close() {
-        mailService.send("serge@softteco.com", subject, bodyBuilder.toString());
+        mailService.send(new SimpleEmailBuilder("serge@softteco.com", subject, bodyBuilder.toString()).build());
     }
 }

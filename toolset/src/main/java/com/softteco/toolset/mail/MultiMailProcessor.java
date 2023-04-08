@@ -15,7 +15,7 @@ public final class MultiMailProcessor implements MailProcessor {
 
     @Override
     public void add(final String email, final String subject, final String body) {
-        mailService.send(email, subject, body);
+        mailService.send(new SimpleEmailBuilder(email, subject, body).build());
     }
 
     @Override

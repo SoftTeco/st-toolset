@@ -2,6 +2,7 @@ package com.softteco.toolset.mail.async;
 
 import com.google.inject.Inject;
 import com.softteco.toolset.mail.MailService;
+import com.softteco.toolset.mail.SimpleEmailBuilder;
 import com.softteco.toolset.scheduler.AbstractJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -32,7 +33,7 @@ public class MailSendingJob extends AbstractJob {
             final String subject = (String) jobDataMap.get(SUBJECT);
             final String body = (String) jobDataMap.get(BODY);
 
-            mailService.send(email, subject, body);
+            mailService.send(new SimpleEmailBuilder(email, subject, body).build());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {

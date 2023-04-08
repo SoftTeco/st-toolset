@@ -5,6 +5,13 @@ import org.apache.commons.mail.EmailConstants;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
+import javax.mail.Transport;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author serge
@@ -58,45 +65,64 @@ public abstract class AbstractMailServiceBean implements MailService {
     }
 
     @Override
+    public boolean isOn() {
+        return true;
+    }
+
+    @Override
     public void sendTestEmail() {
-        send(getTestEmail(), getTestEmailSubject(), getTestEmailText());
+        final EmailDto dto = new EmailDto();
+        dto.to = getTestEmail();
+        dto.subject = getTestEmailSubject();
+        dto.html = getTestEmailText();
+        send(dto);
     }
 
     @Override
-    public void send(final String mail, final String subject, final String body) {
-        try {
-            final Email email = buildSimpleEmail();
-            email.setCharset(EmailConstants.UTF_8);
-            email.setSubject(subject);
-            email.setMsg(body);
-            email.addTo(mail);
-            email.send();
-        } catch (EmailException e) {
-            e.printStackTrace(System.out);
-        }
+    public Map<Serializable, String> send(final List<EmailDto> emails) {
+        return send(emails, null);
     }
 
     @Override
-    public void send(final String mail, final String[] ccs, final String subject, final String body) {
-        if (mail == null) {
-            return;
+    public Map<Serializable, String> send(List<EmailDto> emails, Transport transport) {
+        final Map<Serializable, String> results = new HashMap<>();
+        for (EmailDto each : emails) {
+            results.put(each.externalId, send(each, transport));
         }
+        return results;
+    }
 
-        try {
-            final Email email = buildSimpleEmail();
-            email.setCharset(EmailConstants.UTF_8);
-            email.setSubject(subject);
-            email.setMsg(body);
-            email.addTo(mail);
-            if (ccs != null) {
-                for (String each : ccs) {
-                    email.addCc(each);
-                }
+    @Override
+    public String send(final EmailDto dto) {
+        return send(dto, null);
+    }
+
+    protected Email toEmail(final EmailDto dto) throws EmailException {
+        final Email email = buildSimpleEmail();
+        email.setCharset(EmailConstants.UTF_8);
+        email.setSubject(dto.subject);
+        email.setMsg(dto.html);
+        email.addTo(dto.to);
+        if (dto.ccs != null) {
+            for (String each : dto.ccs) {
+                email.addCc(each);
             }
-            email.send();
-        } catch (EmailException e) {
-            e.printStackTrace(System.out);
         }
+        return email;
     }
 
+    @Override
+    public String send(final EmailDto dto, final Transport transport) {
+        if (!isOn()) {
+            return null;
+        }
+
+        try {
+            toEmail(dto).send();
+            return null;
+        } catch (EmailException e) {
+            e.printStackTrace(System.out);
+            return e.getMessage();
+        }
+    }
 }

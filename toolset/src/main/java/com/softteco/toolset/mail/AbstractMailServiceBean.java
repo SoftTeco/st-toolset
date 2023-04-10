@@ -105,6 +105,9 @@ public abstract class AbstractMailServiceBean implements MailService {
         email.addTo(dto.to);
         if (dto.ccs != null) {
             for (String each : dto.ccs) {
+                if (each == null) {
+                    continue;
+                }
                 email.addCc(each);
             }
         }

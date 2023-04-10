@@ -108,8 +108,14 @@ public abstract class AbstractJpaDao<Entity, Id> {
         return getResultList(query, page);
     }
 
+    protected void afterPersist(final Entity entity) {
+
+    }
+
     public final void persist(final Entity entity) {
         getEntityManager().persist(entity);
+
+        afterPersist(entity);
     }
 
     public final void persistAll(final List<Entity> entities) {
@@ -118,8 +124,20 @@ public abstract class AbstractJpaDao<Entity, Id> {
         }
     }
 
+    protected void afterMerge(final Entity entity) {
+
+    }
+
     public final Entity merge(final Entity entity) {
-        return getEntityManager().merge(entity);
+        try {
+            return getEntityManager().merge(entity);
+        } finally {
+            afterMerge(entity);
+        }
+    }
+
+    protected void afterRemove(final Entity entity) {
+
     }
 
     public final void remove(final Entity entity) {
@@ -129,6 +147,8 @@ public abstract class AbstractJpaDao<Entity, Id> {
             e.printStackTrace(System.out);
         }
         getEntityManager().remove(entity);
+
+        afterRemove(entity);
     }
 
     protected final String getOrderBy(final PageInfoDto page) {

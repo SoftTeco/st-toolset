@@ -120,6 +120,10 @@ public abstract class AbstractMailServiceBean implements MailService {
             return null;
         }
 
+        if (dto.to == null) {
+            return null;
+        }
+
         try {
             toEmail(dto).send();
             return null;

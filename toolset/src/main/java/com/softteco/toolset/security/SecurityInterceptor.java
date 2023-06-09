@@ -1,6 +1,7 @@
 package com.softteco.toolset.security;
 
 import com.google.inject.Inject;
+import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.softteco.toolset.restlet.UserSession;
 import com.softteco.toolset.security.exception.ForbiddenException;
@@ -81,11 +82,16 @@ public final class SecurityInterceptor implements MethodInterceptor {
                 }
             }
         }
-        // check
-        if ((!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles))
-                && !(currentUser != null && userSessionProvider.get().getUsername().equals(currentUser.toString()))) {
-            throw new ForbiddenException("User doesn't have rights on calling this method. Requires roles " + roles
-                    + (currentUser != null ? " or user must be a current" : ""));
+
+        try {
+            // check
+            if ((!roles.isEmpty() && !userSessionProvider.get().hasRoles(roles))
+                    && !(currentUser != null && userSessionProvider.get().getUsername().equals(currentUser.toString()))) {
+                throw new ForbiddenException("User doesn't have rights on calling this method. Requires roles " + roles
+                        + (currentUser != null ? " or user must be a current" : ""));
+            }
+        } catch (OutOfScopeException e) {
+            // do nothing...
         }
     }
 

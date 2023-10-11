@@ -38,6 +38,10 @@ public class InMemoryCache<K, V> implements Cache<K, V> {
 
     @Override
     public boolean containsKey(final K key) {
+        if (key == null) {
+            return false;
+        }
+
         if (!map.containsKey(key)) {
             return false;
         }
@@ -51,6 +55,10 @@ public class InMemoryCache<K, V> implements Cache<K, V> {
 
     @Override
     public void put(final K key, final V value) {
+        if (key == null) {
+            return;
+        }
+
         if (map.size() == size) {
             cleanup();
         }
@@ -89,6 +97,9 @@ public class InMemoryCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(final K key) {
+        if (key == null) {
+            return null;
+        }
         final CacheElement<V> element = map.get(key);
         if (element == null) {
             return null;
@@ -101,6 +112,9 @@ public class InMemoryCache<K, V> implements Cache<K, V> {
 
     @Override
     public void remove(final K key) {
+        if (key == null) {
+            return;
+        }
         map.remove(key);
     }
 

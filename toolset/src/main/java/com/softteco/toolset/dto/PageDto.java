@@ -20,6 +20,7 @@ public class PageDto<Dto extends Serializable> extends PageInfoDto implements Se
         if (page != null) {
             this.pageSize = page.pageSize;
             this.pageNumber = page.pageNumber;
+            this.sort = page.sort;
         }
         this.lines = newLines;
         hasNext = newLines.size() > pageSize;

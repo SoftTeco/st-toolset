@@ -1,7 +1,10 @@
 package com.softteco.toolset.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.math.IntMath;
+
 import java.io.Serializable;
+import java.math.RoundingMode;
 
 /**
  *
@@ -14,6 +17,8 @@ public class PageInfoDto implements Serializable {
 
     public int pageNumber = 0;
     public int pageSize = DEFAULT_PAGE_SIZE;
+    public int totalLines = 0;
+    public int totalPage = 0;
     public SortInfoDto[] sort;
 
     public PageInfoDto() {
@@ -43,4 +48,11 @@ public class PageInfoDto implements Serializable {
         return "PageInfoDto{" + "pageNumber=" + pageNumber + ", pageSize=" + pageSize + '}';
     }
 
+    public void setTotalLines(final Long totalRecords) {
+        this.totalLines = Math.toIntExact(totalRecords);
+    }
+
+    public void setTotalPage() {
+        this.totalPage = IntMath.divide(totalLines, pageSize, RoundingMode.CEILING);
+    }
 }

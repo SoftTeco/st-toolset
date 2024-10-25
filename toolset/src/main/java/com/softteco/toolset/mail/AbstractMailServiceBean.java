@@ -1,19 +1,19 @@
 package com.softteco.toolset.mail;
 
 import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailConstants;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
 import javax.mail.Transport;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author serge
  */
 public abstract class AbstractMailServiceBean implements MailService {
@@ -131,5 +131,51 @@ public abstract class AbstractMailServiceBean implements MailService {
             e.printStackTrace(System.out);
             return e.getMessage();
         }
+    }
+
+    @Override
+    public String sendWithPdfAttachment(final EmailDto dto, final byte[] pdfContent, final String pdfFileName) {
+        if (dto.to == null) {
+            return null;
+        }
+
+        try {
+            final HtmlEmail email = getHtmlEmail(dto);
+
+            final EmailAttachment attachment = new EmailAttachment();
+            attachment.setName(pdfFileName);
+            attachment.setDisposition(EmailAttachment.ATTACHMENT);
+            attachment.setDescription("PDF Attachment");
+
+            final ByteArrayDataSource pdfDataSource = new ByteArrayDataSource(pdfContent, "application/pdf");
+
+            email.attach(pdfDataSource, pdfFileName, "Attached PDF file");
+            email.send();
+
+            return null;
+        } catch (EmailException e) {
+            e.printStackTrace(System.out);
+            return e.getMessage();
+        }
+    }
+
+    private HtmlEmail getHtmlEmail(final EmailDto dto) throws EmailException {
+        final HtmlEmail email = new HtmlEmail();
+
+        configure(email);
+        email.setCharset(EmailConstants.UTF_8);
+        email.setSubject(dto.subject);
+        email.setMsg(dto.html);
+        email.addTo(dto.to);
+
+        if (dto.ccs != null) {
+            for (String cc : dto.ccs) {
+                if (cc != null) {
+                    email.addCc(cc);
+                }
+            }
+        }
+
+        return email;
     }
 }

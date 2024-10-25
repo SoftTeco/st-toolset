@@ -22,4 +22,6 @@ public interface MailService {
     String send(EmailDto email);
 
     String send(EmailDto email, Transport transport);
+
+    String sendWithPdfAttachment(EmailDto email, byte[] pdfContent, String pdfFileName);
 }

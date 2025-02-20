@@ -45,7 +45,8 @@ public final class SchedulerManager {
 
     public void addJob(final JobDetail jd, final Trigger trigger) {
         try {
-            System.out.println("addJob...");
+            final String jobClassName = jd.getJobClass().getName();
+            System.out.println("addJob..." + jobClassName.substring(jobClassName.lastIndexOf('.') + 1));
             final Date date = scheduler.scheduleJob(jd, trigger);
             System.out.println("addJob: " + date);
         } catch (SchedulerException e) {
